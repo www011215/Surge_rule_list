@@ -1,3 +1,4 @@
-bookkeeper.itunes.apple.com
-amp-api.podcasts.apple.com
-bag.itunes.apple.com
+# AUTHOR: wwb
+DOMAIN-SUFFIX,bookkeeper.itunes.apple.com
+DOMAIN-SUFFIX,amp-api.podcasts.apple.com
+DOMAIN-SUFFIX,bag.itunes.apple.com
