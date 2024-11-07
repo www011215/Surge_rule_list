@@ -1,5 +1,5 @@
-#!name=Skip Proxy
-#!desc=跳过部分应用的代理检测
+#!name=Skip Proxy List
+#!desc=跳过部分应用的代理检测_w
 
 [General]
 skip-proxy = %APPEND% www.baidu.com,*.taobao.com, *.boc.cn, *.ccb.com, yunbusiness.ccb.com,wxh.wo.cn,gate.lagou.com,www.abchina.com.cn,www.shanbay.com,login-service.mobile-bank.psbc.com,mobile-bank.psbc.com,*.cmbchina.cn, *.cmbchina.com, *.citicbank.com, *.haodf.com, *.pumc.edu.cn, *cams.ac.cn, *pumch.cn
