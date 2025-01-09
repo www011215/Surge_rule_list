@@ -1,4 +1,4 @@
-#!name =  iRingo: 📍 Location
+#!name =  iRingo: 📍 Location-self
 #!desc = 自定义「定位服务」\n通过「基于网络的地区检测」结果始终为用户设置的地区。
 #!openUrl = http://boxjs.com/#/app/iRingo.Location
 #!author = VirgilClyne[https://github.com/VirgilClyne]
