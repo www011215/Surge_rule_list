@@ -1,0 +1,5 @@
+[Header Rewrite]
+http-request ^https://.*\.githubusercontent\.com\/ header-replace Accept-Language en-us
+
+[MITM]
+hostname = %APPEND% *.githubusercontent.com
