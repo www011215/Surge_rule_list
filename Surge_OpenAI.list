@@ -11,6 +11,44 @@ DOMAIN, openaicom-api-bdcpf8c6d2e9atf6.z01.azurefd.net
 DOMAIN, openaicomproductionae4b.blob.core.windows.net
 DOMAIN, production-openaicom-storage.azureedge.net
 DOMAIN, static.cloudflareinsights.com
+DOMAIN, ai.google.dev
+DOMAIN, aistudio.google.com
+DOMAIN, alkalicore-pa.clients6.google.com
+DOMAIN, alkalimakersuite-pa.clients6.google.com
+DOMAIN, api-iam.intercom.io
+DOMAIN, api.github.com
+DOMAIN, api.msn.com
+DOMAIN, apple-relay.apple.com
+DOMAIN, apple-relay.cloudflare.com
+DOMAIN, apple-relay.fastly-edge.com
+DOMAIN, assets.msn.com
+DOMAIN, bard.google.com
+DOMAIN, cdn.usefathom.com
+DOMAIN, chatgpt.livekit.cloud
+DOMAIN, copilot.microsoft.com
+DOMAIN, cp4.cloudflare.com
+DOMAIN, gateway.ai.cloudflare.com
+DOMAIN, gateway.bingviz.microsoft.net
+DOMAIN, gateway.bingviz.microsoftapp.net
+DOMAIN, gemini.google.com
+DOMAIN, generativelanguage.googleapis.com
+DOMAIN, guzzoni.apple.com
+DOMAIN, imagine.meta.com
+DOMAIN, in.appcenter.ms
+DOMAIN, jules.google.com
+DOMAIN, location.microsoft.com
+DOMAIN, makersuite.google.com
+DOMAIN, odc.officeapps.live.com
+DOMAIN, openaiapi-site.azureedge.net
+DOMAIN, pplx-res.cloudinary.com
+DOMAIN, proactivebackend-pa.googleapis.com
+DOMAIN, r.bing.com
+DOMAIN, self.events.data.microsoft.com
+DOMAIN, services.bingapis.com
+DOMAIN, sfo3.turn.livekit.cloud
+DOMAIN, sydney.bing.com
+DOMAIN, th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe
+DOMAIN, www.bing.com
 DOMAIN-SUFFIX, algolia.net
 DOMAIN-SUFFIX, auth0.com
 DOMAIN-SUFFIX, cdn.cloudflare.net
@@ -22,7 +60,7 @@ DOMAIN-SUFFIX, identrust.com
 DOMAIN-SUFFIX, intercom.io
 DOMAIN-SUFFIX, intercomcdn.com
 DOMAIN-SUFFIX, launchdarkly.com
-DOMAIN-SUFFIX, oaistatic.com
+DOMAIN-SUFFIX, oastatic.com
 DOMAIN-SUFFIX, oaiusercontent.com
 DOMAIN-SUFFIX, observeit.net
 DOMAIN-SUFFIX, openai.com
@@ -32,7 +70,101 @@ DOMAIN-SUFFIX, poe.com
 DOMAIN-SUFFIX, segment.io
 DOMAIN-SUFFIX, sentry.io
 DOMAIN-SUFFIX, stripe.com
+DOMAIN-SUFFIX, ai.com
+DOMAIN-SUFFIX, api.statsig.com
+DOMAIN-SUFFIX, chatgpt.com
+DOMAIN-SUFFIX, chatgpt.livekit.cloud
+DOMAIN-SUFFIX, host.livekit.cloud
+DOMAIN-SUFFIX, turn.livekit.cloud
+DOMAIN-SUFFIX, aistudio.google.com
+DOMAIN-SUFFIX, anthropic.com
+DOMAIN-SUFFIX, api.microsoftapp.net
+DOMAIN-SUFFIX, apis.google.com
+DOMAIN-SUFFIX, auth0.openai.com
+DOMAIN-SUFFIX, azureedge.net
+DOMAIN-SUFFIX, azurefd.net
+DOMAIN-SUFFIX, bard.google.com
+DOMAIN-SUFFIX, bing-shopping.microsoft-falcon.io
+DOMAIN-SUFFIX, bing.com
+DOMAIN-SUFFIX, blob.core.windows.net
+DOMAIN-SUFFIX, chat.com
+DOMAIN-SUFFIX, chat.openai.com
+DOMAIN-SUFFIX, claude.ai
+DOMAIN-SUFFIX, claude.ai.com
+DOMAIN-SUFFIX, cloudflareinsights.com
+DOMAIN-SUFFIX, cohere.ai
+DOMAIN-SUFFIX, compute-pipe.com
+DOMAIN-SUFFIX, cursor-cdn.com
+DOMAIN-SUFFIX, cursor.com
+DOMAIN-SUFFIX, cursor.sh
+DOMAIN-SUFFIX, cursorapi.com
+DOMAIN-SUFFIX, deepmind.com
+DOMAIN-SUFFIX, deepmind.google
+DOMAIN-SUFFIX, dify.ai
+DOMAIN-SUFFIX, doubleclick.net
+DOMAIN-SUFFIX, edgecompute.app
+DOMAIN-SUFFIX, edgeservices.bing.com
+DOMAIN-SUFFIX, f7tk.com
+DOMAIN-SUFFIX, geller-pa.googleapis.com
+DOMAIN-SUFFIX, gemini.google.com
+DOMAIN-SUFFIX, generativeai.google
+DOMAIN-SUFFIX, generativelanguage.googleapis.com
+DOMAIN-SUFFIX, githubcopilot.com
+DOMAIN-SUFFIX, google-analytics.com
+DOMAIN-SUFFIX, googleai.com
+DOMAIN-SUFFIX, googleapis.com
+DOMAIN-SUFFIX, googletagmanager.com
+DOMAIN-SUFFIX, gpt3sandbox.com
+DOMAIN-SUFFIX, grazie.ai
+DOMAIN-SUFFIX, grazie.aws.intellij.net
+DOMAIN-SUFFIX, grok.com
+DOMAIN-SUFFIX, grok.x.ai
+DOMAIN-SUFFIX, groq.com
+DOMAIN-SUFFIX, gstatic.com
+DOMAIN-SUFFIX, hcaptcha.com
+DOMAIN-SUFFIX, huggingface.co
+DOMAIN-SUFFIX, jasper.ai
+DOMAIN-SUFFIX, livekit.cloud
+DOMAIN-SUFFIX, makersuite.google.com
+DOMAIN-SUFFIX, meta.ai
+DOMAIN-SUFFIX, meta.com
+DOMAIN-SUFFIX, midjourney.com
+DOMAIN-SUFFIX, notebooklm.google
+DOMAIN-SUFFIX, notebooklm.google.com
+DOMAIN-SUFFIX, openart.ai
+DOMAIN-SUFFIX, perplexity.ai
+DOMAIN-SUFFIX, perplexity.com
+DOMAIN-SUFFIX, pki.goog
+DOMAIN-SUFFIX, platform.openai.com
+DOMAIN-SUFFIX, pplx.ai
+DOMAIN-SUFFIX, proactivebackend-pa.googleapis.com
+DOMAIN-SUFFIX, smoot.apple.com
+DOMAIN-SUFFIX, sora.com
+DOMAIN-SUFFIX, stability.ai
+DOMAIN-SUFFIX, statsigapi.net
+DOMAIN-SUFFIX, stripe.network
+DOMAIN-SUFFIX, vercel.app
+DOMAIN-SUFFIX, vimeo.com
+DOMAIN-SUFFIX, vimeocdn.com
+DOMAIN-SUFFIX, x.ai
 DOMAIN-KEYWORD, openaicom-api
+DOMAIN-KEYWORD, openai
+DOMAIN-KEYWORD, Claude
+DOMAIN-KEYWORD, Grok
+DOMAIN-KEYWORD, alkalimakersuite-pa.clients6.google.com
+DOMAIN-KEYWORD, anthropic
+DOMAIN-KEYWORD, claude
+DOMAIN-KEYWORD, cloudflare
+DOMAIN-KEYWORD, colab
+DOMAIN-KEYWORD, developerprofiles
+DOMAIN-KEYWORD, generativelanguage
+DOMAIN-KEYWORD, labs.google
+DOMAIN-KEYWORD, notebooklm.google
+DOMAIN-KEYWORD, openaiapi
+DOMAIN-KEYWORD, openaicom
+DOMAIN-KEYWORD, perplexity
+DOMAIN-KEYWORD, prodregistryv
+DOMAIN-KEYWORD, alkalicore-pa.clients6.google.com
 ## ChatGPT_Voice.list__________________
 DOMAIN-SUFFIX, chatgpt.livekit.cloud
 DOMAIN-SUFFIX, host.livekit.cloud
@@ -41,7 +173,6 @@ IP-CIDR, 24.199.123.28/32, no-resolve
 IP-CIDR, 45.32.12.145/32, no-resolve
 IP-CIDR, 45.55.196.68/32, no-resolve
 IP-CIDR, 45.76.214.191/32, no-resolve
-IP-CIDR, 45.32.12.145/32, no-resolve
 IP-CIDR, 64.23.132.171/32, no-resolve
 IP-CIDR, 104.238.150.13/32, no-resolve
 IP-CIDR, 143.198.200.27/32, no-resolve
@@ -51,10 +182,10 @@ IP-CIDR, 164.92.71.155/32, no-resolve
 IP-CIDR, 164.92.115.213/32, no-resolve
 IP-CIDR, 198.13.38.242/32, no-resolve
 IP-CIDR, 207.148.108.93/32, no-resolve
+IP-CIDR, 129.146.3.78/32, no-resolve
 IP-CIDR6, 2001:19f0:7001:55b3:5400:4ff:feab:ba8f/128, no-resolve
 IP-CIDR6, 2001:19f0:7001:8e6:5400:4ff:feab:b953/128, no-resolve
 IP-CIDR6, 2001:19f0:7001:1149:5400:4ff:feac:a0b3/128, no-resolve
-IP-CIDR6, 2001:19f0:7001:8e6:5400:4ff:feab:b953/128, no-resolve
 IP-CIDR6, 2401:c080:1000:47c5:5400:4ff:feab:f724/128, no-resolve
 IP-ASN, 14061, no-resolve
 IP-ASN, 20473, no-resolve
