@@ -73,5 +73,8 @@ DOMAIN-KEYWORD,generativelanguage
 DOMAIN,cdn.usefathom.com
 DOMAIN-SUFFIX,anthropic.com
 DOMAIN-SUFFIX,claude.ai
+PROCESS-NAME,claude
+PROCESS-NAME,/Applications/Claude.app/
+PROCESS-NAME,/opt/homebrew/Caskroom/claude-code/2.0.14/claude
 
 #Grok.list___________________________
