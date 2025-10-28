@@ -4,11 +4,11 @@
 
 [Rule]
 
-# Anti-AD Surge 规则集 - 核心广告屏蔽（包含完整规则）
+# Anti-AD Surge 规则集 - 核心广告屏蔽
 
 RULE-SET,https://anti-ad.net/surge.txt,REJECT
 
-# 常见广告联盟域名
+# Google 广告联盟
 
 DOMAIN-SUFFIX,doubleclick.net,REJECT
 DOMAIN-SUFFIX,googleadservices.com,REJECT
@@ -19,10 +19,9 @@ DOMAIN-SUFFIX,googletagservices.com,REJECT
 
 # Facebook 广告追踪
 
-DOMAIN-SUFFIX,facebook.com,REJECT,extended-matching
-DOMAIN-KEYWORD,facebook,REJECT,extended-matching
 DOMAIN-SUFFIX,connect.facebook.net,REJECT
 DOMAIN-SUFFIX,graph.facebook.com,REJECT
+DOMAIN-KEYWORD,facebook-analytics,REJECT
 
 # 国内广告联盟
 
@@ -31,20 +30,22 @@ DOMAIN-SUFFIX,mmstat.com,REJECT
 DOMAIN-SUFFIX,cnzz.com,REJECT
 DOMAIN-SUFFIX,umeng.com,REJECT
 DOMAIN-SUFFIX,umengcloud.com,REJECT
-DOMAIN-SUFFIX,baidu-ad.net,REJECT
-DOMAIN-SUFFIX,baidustatic.com,REJECT
-
-# 字节跳动广告
-
-DOMAIN-SUFFIX,pglstatp-toutiao.com,REJECT
-DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,REJECT
+DOMAIN-SUFFIX,pos.baidu.com,REJECT
+DOMAIN-SUFFIX,cpro.baidu.com,REJECT
+DOMAIN-SUFFIX,cbjs.baidu.com,REJECT
+DOMAIN-SUFFIX,hm.baidu.com,REJECT
 
 # 腾讯广告
 
 DOMAIN-SUFFIX,gdt.qq.com,REJECT
 DOMAIN-SUFFIX,gdtimg.com,REJECT
 
-# 其他追踪
+# 字节跳动广告
+
+DOMAIN-SUFFIX,pglstatp-toutiao.com,REJECT
+DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,REJECT
+
+# 应用追踪
 
 DOMAIN-SUFFIX,adjust.com,REJECT
 DOMAIN-SUFFIX,appsflyer.com,REJECT
@@ -52,106 +53,73 @@ DOMAIN-SUFFIX,branch.io,REJECT
 
 [Host]
 
-# DNS 层面直接屏蔽（最高效）
-
-# Google 广告
+# DNS 层面直接屏蔽
 
 *.doubleclick.net = reject
 *.googleadservices.com = reject
 *.googlesyndication.com = reject
 *.googletagservices.com = reject
 pagead2.googlesyndication.com = reject
-tpc.googlesyndication.com = reject
-
-# Google Analytics
-
 *.google-analytics.com = reject
-ssl.google-analytics.com = reject
-www.google-analytics.com = reject
-
-# Facebook 追踪
-
+*.googletagmanager.com = reject
 an.facebook.com = reject
 graph.facebook.com = reject
 connect.facebook.net = reject
-
-# 国内广告
-
 *.tanx.com = reject
 *.mmstat.com = reject
 *.cnzz.com = reject
 *.umeng.com = reject
 *.umengcloud.com = reject
-
-# 百度广告
-
 cpro.baidu.com = reject
 pos.baidu.com = reject
 cbjs.baidu.com = reject
 hm.baidu.com = reject
-
-# 腾讯广告
-
 mi.gdt.qq.com = reject
 win.gdt.qq.com = reject
 v.gdt.qq.com = reject
 
 [URL Rewrite]
 
-# Google 广告重写（返回空内容）
+# Google 广告
 
-^https?://.+.googlesyndication.com/.+ - reject-200
-^https?://.+.googleadservices.com/.+ - reject-200
-^https?://.+.doubleclick.net/.+ - reject-200
-^https?://pagead2.googlesyndication.com/.+ - reject-200
+^https?://.+.googlesyndication.com/.+ - reject
+^https?://.+.googleadservices.com/.+ - reject
+^https?://.+.doubleclick.net/.+ - reject
+^https?://pagead2.googlesyndication.com/.+ - reject
 
-# Google Analytics 重写
+# Google Analytics
 
-^https?://.+.google-analytics.com/.+ - reject-200
-^https?://.+.googletagmanager.com/.+ - reject-200
-^https?://.+.googletagservices.com/.+ - reject-200
+^https?://.+.google-analytics.com/.+ - reject
+^https?://.+.googletagmanager.com/.+ - reject
+^https?://.+.googletagservices.com/.+ - reject
 
-# Facebook 追踪重写
+# Facebook 追踪
 
-^https?://graph.facebook.com/.+/activities - reject-200
-^https?://graph.facebook.com/.+/advertisers - reject-200
-^https?://connect.facebook.net/.*/fbevents.js - reject-200
+^https?://graph.facebook.com/.+/(activities|advertisers) - reject
+^https?://connect.facebook.net/.*/fbevents.js - reject
 
-# 腾讯广告 SDK
+# 腾讯广告
 
-^https?://mi.gdt.qq.com/.+ - reject-200
-^https?://win.gdt.qq.com/.+ - reject-200
+^https?://(mi|win|v).gdt.qq.com/.+ - reject
 
 # 百度联盟
 
-^https?://cpro.baidu.com/.+ - reject-200
-^https?://pos.baidu.com/.+ - reject-200
+^https?://(cpro|pos).baidu.com/.+ - reject
 
-# 淘宝/阿里广告
+# 阿里广告
 
-^https?://.+.mmstat.com/.+ - reject-200
-^https?://.+.tanx.com/.+ - reject-200
+^https?://.+.(mmstat|tanx).com/.+ - reject
 
 # 友盟统计
 
-^https?://.+.umeng.com/.+ - reject-200
-^https?://.+.umengcloud.com/.+ - reject-200
+^https?://.+.umeng(cloud)?.com/.+ - reject
 
-# 常见广告图片格式
+# 常见广告资源
 
-^https?://.+/(ad|ads|advert|advertisement|banner|popup).jpg - reject-img
-^https?://.+/(ad|ads|advert|advertisement|banner|popup).png - reject-img
-^https?://.+/(ad|ads|advert|advertisement|banner|popup).gif - reject-img
-
-# 常见广告 JS
-
-^https?://.+/(ad|ads|advert|advertisement|adsense|adservice).js - reject-200
+^https?://.+/(ad|ads|advert|advertisement|banner|popup).(jpg|png|gif|js) - reject
 
 [Map Local]
-
-# 映射本地空文件（效果更好）
-
-^https?://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js data=“text/javascript” header=“Content-Type: text/javascript”
+^https?://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js data-type=text data=”” status-code=200
 
 [MITM]
-hostname = %APPEND% *.googlesyndication.com, *.googleadservices.com, *.doubleclick.net, *.google-analytics.com, *.googletagmanager.com, *.googletagservices.com, *.facebook.com, graph.facebook.com, connect.facebook.net, *.gdt.qq.com, cpro.baidu.com, pos.baidu.com, *.mmstat.com, *.tanx.com, *.umeng.com, *.umengcloud.com
+hostname = %APPEND% *.googlesyndication.com, *.googleadservices.com, *.doubleclick.net, *.google-analytics.com, *.googletagmanager.com, *.googletagservices.com, graph.facebook.com, connect.facebook.net, *.gdt.qq.com, cpro.baidu.com, pos.baidu.com, *.mmstat.com, *.tanx.com, *.umeng.com, *.umengcloud.com
