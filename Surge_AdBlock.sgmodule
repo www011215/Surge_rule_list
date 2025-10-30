@@ -65,19 +65,44 @@ win.gdt.qq.com = reject
 v.gdt.qq.com = reject
 
 [URL Rewrite]
-"^https?:\/\/.+\.googlesyndication\.com\/.+" - reject
-"^https?:\/\/.+\.googleadservices\.com\/.+" - reject
-"^https?:\/\/.+\.doubleclick\.net\/.+" - reject
-"^https?:\/\/pagead2\.googlesyndication\.com\/.+" - reject
-"^https?:\/\/.+\.google-analytics\.com\/.+" - reject
-"^https?:\/\/.+\.googletagmanager\.com\/.+" - reject
-"^https?:\/\/.+\.googletagservices\.com\/.+" - reject
-"^https?:\/\/graph\.facebook\.com\/.+\/(activities|advertisers)" - reject
-"^https?:\/\/connect\.facebook\.net\/.*\/fbevents\.js" - reject
-"^https?:\/\/(mi|win|v)\.gdt\.qq\.com\/.+" - reject
-"^https?:\/\/(cpro|pos)\.baidu\.com\/.+" - reject
-"^https?:\/\/.+\.(mmstat|tanx)\.com\/.+" - reject
-"^https?:\/\/.+\.umeng(cloud)?\.com\/.+" - reject
+# Google 广告
+^https?:\/\/.+\.googlesyndication\.com\/.+ - reject
+^https?:\/\/.+\.googleadservices\.com\/.+ - reject
+^https?:\/\/.+\.doubleclick\.net\/.+ - reject
+^https?:\/\/pagead2\.googlesyndication\.com\/.+ - reject
+
+# Google Analytics
+^https?:\/\/.+\.google-analytics\.com\/.+ - reject
+^https?:\/\/.+\.googletagmanager\.com\/.+ - reject
+^https?:\/\/.+\.googletagservices\.com\/.+ - reject
+
+# Facebook 追踪
+^https?:\/\/graph\.facebook\.com\/.+\/(activities|advertisers) - reject
+^https?:\/\/connect\.facebook\.net\/.*\/fbevents\.js - reject
+
+# 腾讯广告
+^https?:\/\/(mi|win|v)\.gdt\.qq\.com\/.+ - reject
+
+# 百度联盟
+^https?:\/\/(cpro|pos)\.baidu\.com\/.+ - reject
+
+# 阿里广告
+^https?:\/\/.+\.(mmstat|tanx)\.com\/.+ - reject
+
+# 友盟统计
+^https?:\/\/.+\.umeng(cloud)?\.com\/.+ - reject
+
+[Map Local]
+# Google Adsense
+^https?:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js$ data-type=text data="" status-code=200 header="Content-Type:text/javascript"
+
+# Google Analytics
+^https?:\/\/.+\.google-analytics\.com\/.+ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+# Facebook Pixel
+^https?:\/\/connect\.facebook\.net\/.*\/fbevents\.js$ data-type=text data="" status-code=200 header="Content-Type:text/javascript"
 
 [MITM]
 hostname = %APPEND% *.googlesyndication.com, *.googleadservices.com, *.doubleclick.net, *.google-analytics.com, *.googletagmanager.com, *.googletagservices.com, graph.facebook.com, connect.facebook.net, *.gdt.qq.com, cpro.baidu.com, pos.baidu.com, *.mmstat.com, *.tanx.com, *.umeng.com, *.umengcloud.com
+h2 = true
+tcp-connection = true
