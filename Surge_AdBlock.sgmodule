@@ -49,10 +49,6 @@ mi.gdt.qq.com = reject
 ^https?:\/\/.+\.(mmstat|tanx)\.com\/.+ - reject
 ^https?:\/\/.+\.umeng(cloud)?\.com\/.+ - reject
 
-[Map Local]
-^https?:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js$ data-type=text data="" status-code=200 header="Content-Type:text/javascript"
-^https?:\/\/connect\.facebook\.net\/.*\/fbevents\.js$ data-type=text data="" status-code=200 header="Content-Type:text/javascript"
-
 [MITM]
 hostname = %APPEND% *.googlesyndication.com, *.googleadservices.com, *.doubleclick.net, *.google-analytics.com, *.googletagmanager.com, graph.facebook.com, connect.facebook.net, cpro.baidu.com, pos.baidu.com, *.mmstat.com, *.tanx.com, *.umeng.com, *.umengcloud.com
 h2 = true
