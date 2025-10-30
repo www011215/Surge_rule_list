@@ -1,7 +1,3 @@
-#!name=AdBlock Pro
-#!desc=完整广告屏蔽模块 - 需要MitM配置
-#!system=ios,mac
-
 [Rule]
 RULE-SET,https://anti-ad.net/surge.txt,REJECT
 DOMAIN-SUFFIX,doubleclick.net,REJECT
