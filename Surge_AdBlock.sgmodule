@@ -3,13 +3,10 @@
 #!system=ios,mac
 
 [Rule]
-
-# Anti-AD Surge 规则集 - 核心广告屏蔽
-
+# Anti-AD Surge 规则集
 RULE-SET,https://anti-ad.net/surge.txt,REJECT
 
-# Google 广告联盟
-
+# Google 广告
 DOMAIN-SUFFIX,doubleclick.net,REJECT
 DOMAIN-SUFFIX,googleadservices.com,REJECT
 DOMAIN-SUFFIX,googlesyndication.com,REJECT
@@ -17,14 +14,11 @@ DOMAIN-SUFFIX,google-analytics.com,REJECT
 DOMAIN-SUFFIX,googletagmanager.com,REJECT
 DOMAIN-SUFFIX,googletagservices.com,REJECT
 
-# Facebook 广告追踪
-
+# Facebook 广告
 DOMAIN-SUFFIX,connect.facebook.net,REJECT
 DOMAIN-SUFFIX,graph.facebook.com,REJECT
-DOMAIN-KEYWORD,facebook-analytics,REJECT
 
-# 国内广告联盟
-
+# 国内广告平台
 DOMAIN-SUFFIX,tanx.com,REJECT
 DOMAIN-SUFFIX,mmstat.com,REJECT
 DOMAIN-SUFFIX,cnzz.com,REJECT
@@ -34,27 +28,19 @@ DOMAIN-SUFFIX,pos.baidu.com,REJECT
 DOMAIN-SUFFIX,cpro.baidu.com,REJECT
 DOMAIN-SUFFIX,cbjs.baidu.com,REJECT
 DOMAIN-SUFFIX,hm.baidu.com,REJECT
-
-# 腾讯广告
-
 DOMAIN-SUFFIX,gdt.qq.com,REJECT
 DOMAIN-SUFFIX,gdtimg.com,REJECT
 
-# 字节跳动广告
-
+# 字节跳动
 DOMAIN-SUFFIX,pglstatp-toutiao.com,REJECT
 DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,REJECT
 
 # 应用追踪
-
 DOMAIN-SUFFIX,adjust.com,REJECT
 DOMAIN-SUFFIX,appsflyer.com,REJECT
 DOMAIN-SUFFIX,branch.io,REJECT
 
 [Host]
-
-# DNS 层面直接屏蔽
-
 *.doubleclick.net = reject
 *.googleadservices.com = reject
 *.googlesyndication.com = reject
@@ -79,47 +65,19 @@ win.gdt.qq.com = reject
 v.gdt.qq.com = reject
 
 [URL Rewrite]
-
-# Google 广告
-
-^https?://.+.googlesyndication.com/.+ - reject
-^https?://.+.googleadservices.com/.+ - reject
-^https?://.+.doubleclick.net/.+ - reject
-^https?://pagead2.googlesyndication.com/.+ - reject
-
-# Google Analytics
-
-^https?://.+.google-analytics.com/.+ - reject
-^https?://.+.googletagmanager.com/.+ - reject
-^https?://.+.googletagservices.com/.+ - reject
-
-# Facebook 追踪
-
-^https?://graph.facebook.com/.+/(activities|advertisers) - reject
-^https?://connect.facebook.net/.*/fbevents.js - reject
-
-# 腾讯广告
-
-^https?://(mi|win|v).gdt.qq.com/.+ - reject
-
-# 百度联盟
-
-^https?://(cpro|pos).baidu.com/.+ - reject
-
-# 阿里广告
-
-^https?://.+.(mmstat|tanx).com/.+ - reject
-
-# 友盟统计
-
-^https?://.+.umeng(cloud)?.com/.+ - reject
-
-# 常见广告资源
-
-^https?://.+/(ad|ads|advert|advertisement|banner|popup).(jpg|png|gif|js) - reject
-
-[Map Local]
-^https?://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js data-type=text data=”” status-code=200
+"^https?:\/\/.+\.googlesyndication\.com\/.+" - reject
+"^https?:\/\/.+\.googleadservices\.com\/.+" - reject
+"^https?:\/\/.+\.doubleclick\.net\/.+" - reject
+"^https?:\/\/pagead2\.googlesyndication\.com\/.+" - reject
+"^https?:\/\/.+\.google-analytics\.com\/.+" - reject
+"^https?:\/\/.+\.googletagmanager\.com\/.+" - reject
+"^https?:\/\/.+\.googletagservices\.com\/.+" - reject
+"^https?:\/\/graph\.facebook\.com\/.+\/(activities|advertisers)" - reject
+"^https?:\/\/connect\.facebook\.net\/.*\/fbevents\.js" - reject
+"^https?:\/\/(mi|win|v)\.gdt\.qq\.com\/.+" - reject
+"^https?:\/\/(cpro|pos)\.baidu\.com\/.+" - reject
+"^https?:\/\/.+\.(mmstat|tanx)\.com\/.+" - reject
+"^https?:\/\/.+\.umeng(cloud)?\.com\/.+" - reject
 
 [MITM]
 hostname = %APPEND% *.googlesyndication.com, *.googleadservices.com, *.doubleclick.net, *.google-analytics.com, *.googletagmanager.com, *.googletagservices.com, graph.facebook.com, connect.facebook.net, *.gdt.qq.com, cpro.baidu.com, pos.baidu.com, *.mmstat.com, *.tanx.com, *.umeng.com, *.umengcloud.com
