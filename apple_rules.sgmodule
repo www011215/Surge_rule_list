@@ -4,3 +4,4 @@
 [Rule]
 DOMAIN-SUFFIX, apple.com, LAX.CoxCommunications|DMIT
 RULE-SET, https://github.com/Blankwonder/surge-list/raw/master/apple.list, LAX.CoxCommunications|DMIT
+RULE-SET, https://github.com/blackmatrix7/ios_rule_script/blob/master/rule/Surge/Apple/Apple_All_No_Resolve.list, LAX.CoxCommunications|DMIT
