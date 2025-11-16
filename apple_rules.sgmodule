@@ -1,0 +1,6 @@
+#!name = Apple Rules Proxy
+#!category = Apple
+
+[Rule]
+DOMAIN-SUFFIX, apple.com, LAX.CoxCommunications|DMIT
+RULE-SET, https://github.com/Blankwonder/surge-list/raw/master/apple.list, LAX.CoxCommunications|DMIT
