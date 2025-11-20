@@ -10,7 +10,7 @@
 
 [Rule]
 # 📍 Country Code
-DOMAIN,gspe1-ssl.ls.apple.com, LAX.CoxCommunications|DMIT
+DOMAIN,gspe1-ssl.ls.apple.com, US
 
 [Script]
 # 📍 Country Code
