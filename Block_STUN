@@ -1,0 +1,5 @@
+#!name = STUN Block
+#!category = AD BLOCK
+
+[Rule]
+PROTOCOL,STUN,REJECT
