@@ -1,3 +1,12 @@
+## New Added
+PROCESS-NAME,/Applications/Antigravity.app/
+PROCESS-NAME,/Applications/Claude.app/
+PROCESS-NAME,/opt/homebrew/Caskroom/claude-code/*
+PROCESS-NAME,"/Applications/Visual Studio Code.app/"
+DOMAIN-SUFFIX,openai.com
+RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/OpenAI/OpenAI.list
+RULE-SET,https://ruleset.skk.moe/List/non_ip/ai.conf
+
 #OpenAI.list___________________________
 #https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/OpenAI/OpenAI.list
 # NAME: OpenAI
