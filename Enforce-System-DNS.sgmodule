@@ -2,7 +2,7 @@
 #!desc = Enforce Surge to use specific DNS to handle all lookup.
 
 [General]
-dns-server = 223.5.5.5
+dns-server = 60.205.107.123
 
 [Host]
-* = server:223.5.5.5
+* = server:60.205.107.123
