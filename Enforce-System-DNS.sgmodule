@@ -1,0 +1,8 @@
+#!name = Enforce System DNS
+#!desc = Enforce Surge to use specific DNS to handle all lookup.
+
+[General]
+dns-server = 223.5.5.5
+
+[Host]
+* = server:223.5.5.5
