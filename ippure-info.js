@@ -22,6 +22,7 @@ function getArgs() {
     org: params.ORG !== "0",
     risk: params.RISK !== "0",
     residential: params.RESIDENTIAL !== "0",
+    geo: params.GEO !== "0",
     mask: params.MASK === "1",
     timeout: parseInt(params.TIMEOUT) || 10,
     icon: params.ICON || "globe.asia.australia",
@@ -51,13 +52,10 @@ function maskIP(ip) {
   return parts[0] + "." + parts[1] + ".*.*";
 }
 
-// ============ 风险等级标签 ============
+// ============ 风险分数显示 ============
 function riskLabel(score) {
   if (score == null) return "N/A";
-  if (score <= 25) return `✅ ${score} 低风险`;
-  if (score <= 50) return `⚠️ ${score} 中等`;
-  if (score <= 75) return `🟠 ${score} 较高`;
-  return `🔴 ${score} 高风险`;
+  return `${score}/100`;
 }
 
 // ============ HTTP 请求封装 ============
@@ -124,6 +122,13 @@ async function main() {
     // 风险系数
     if (args.risk && data.fraudScore != null) {
       lines.push(`🛡️ 风险: ${riskLabel(data.fraudScore)}`);
+    }
+
+    // 经纬度
+    if (args.geo) {
+      const lat = data.latitude || "N/A";
+      const lon = data.longitude || "N/A";
+      lines.push(`🌐 ${lat}, ${lon}`);
     }
 
     // 原生 / 机房
