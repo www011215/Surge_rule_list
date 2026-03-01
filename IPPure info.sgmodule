@@ -1,0 +1,15 @@
+#!name=IPPure 网络信息
+#!desc=通过 IPPure API 查询当前出口 IP 的位置、ASN、风险系数、是否原生/机房 IP 等信息。支持面板显示与网络变化通知。
+#!category=Network
+#!arguments=FLAG:1,ASN:1,ORG:1,RISK:1,RESIDENTIAL:1,MASK:0,TIMEOUT:10,ICON:globe.asia.australia,ICON_COLOR:#6699FF,PANEL_NAME:IPPure 信息面板,UPDATE_INTERVAL:-1,EVENT_SCRIPT_NAME:IPPure 网络变化,EVENT_DELAY:3
+#!arguments-desc=1 为开启, 0 为关闭\n\n · [FLAG]: 显示国旗 Emoji\n · [ASN]: 显示 ASN 编号\n · [ORG]: 显示 AS 组织名称\n · [RISK]: 显示 IP 风险系数 (fraudScore)\n · [RESIDENTIAL]: 显示是否原生住宅 IP / 机房 IP\n · [MASK]: 打码 IP 保护隐私\n · [TIMEOUT]: 超时设置(秒)\n · [ICON]: 面板图标\n · [ICON_COLOR]: 面板图标颜色\n · [PANEL_NAME]: 面板名称, 输入 # 禁用\n · [UPDATE_INTERVAL]: 面板自动刷新间隔(秒), -1 为不自动刷新\n · [EVENT_SCRIPT_NAME]: 网络变化通知脚本名称, 输入 # 禁用\n · [EVENT_DELAY]: 网络变化后延迟查询(秒)
+
+[Script]
+# Panel
+IPPure 信息面板 = type=generic,timeout=120,script-path=https://raw.githubusercontent.com/pureproxy/scripts/main/surge/ippure-info.js,argument="FLAG={{{FLAG}}}&ASN={{{ASN}}}&ORG={{{ORG}}}&RISK={{{RISK}}}&RESIDENTIAL={{{RESIDENTIAL}}}&MASK={{{MASK}}}&TIMEOUT={{{TIMEOUT}}}&ICON={{{ICON}}}&ICON_COLOR={{{ICON_COLOR}}}&EVENT_DELAY={{{EVENT_DELAY}}}"
+
+# Event
+{{{EVENT_SCRIPT_NAME}}} = type=event,event-name=network-changed,timeout=120,script-path=https://raw.githubusercontent.com/pureproxy/scripts/main/surge/ippure-info.js,argument="TYPE=EVENT&FLAG={{{FLAG}}}&ASN={{{ASN}}}&ORG={{{ORG}}}&RISK={{{RISK}}}&RESIDENTIAL={{{RESIDENTIAL}}}&MASK={{{MASK}}}&TIMEOUT={{{TIMEOUT}}}&ICON={{{ICON}}}&ICON_COLOR={{{ICON_COLOR}}}&EVENT_DELAY={{{EVENT_DELAY}}}"
+
+[Panel]
+{{{PANEL_NAME}}} = script-name=IPPure 信息面板,update-interval={{{UPDATE_INTERVAL}}}
