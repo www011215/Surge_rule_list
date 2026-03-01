@@ -9,7 +9,7 @@
 IPPure 信息面板 = type=generic,timeout=120,script-path=https://raw.githubusercontent.com/www011215/Surge_rule_list/refs/heads/main/ippure-info.js,argument="FLAG={{{FLAG}}}&ASN={{{ASN}}}&ORG={{{ORG}}}&RISK={{{RISK}}}&RESIDENTIAL={{{RESIDENTIAL}}}&MASK={{{MASK}}}&TIMEOUT={{{TIMEOUT}}}&ICON={{{ICON}}}&ICON_COLOR={{{ICON_COLOR}}}&EVENT_DELAY={{{EVENT_DELAY}}}"
 
 # Event
-{{{EVENT_SCRIPT_NAME}}} = type=event,event-name=network-changed,timeout=120,script-path=https://raw.githubusercontent.com/pureproxy/scripts/main/surge/ippure-info.js,argument="TYPE=EVENT&FLAG={{{FLAG}}}&ASN={{{ASN}}}&ORG={{{ORG}}}&RISK={{{RISK}}}&RESIDENTIAL={{{RESIDENTIAL}}}&MASK={{{MASK}}}&TIMEOUT={{{TIMEOUT}}}&ICON={{{ICON}}}&ICON_COLOR={{{ICON_COLOR}}}&EVENT_DELAY={{{EVENT_DELAY}}}"
+{{{EVENT_SCRIPT_NAME}}} = type=event,event-name=network-changed,timeout=120,script-path=https://raw.githubusercontent.com/www011215/Surge_rule_list/refs/heads/main/ippure-info.js,argument="TYPE=EVENT&FLAG={{{FLAG}}}&ASN={{{ASN}}}&ORG={{{ORG}}}&RISK={{{RISK}}}&RESIDENTIAL={{{RESIDENTIAL}}}&MASK={{{MASK}}}&TIMEOUT={{{TIMEOUT}}}&ICON={{{ICON}}}&ICON_COLOR={{{ICON_COLOR}}}&EVENT_DELAY={{{EVENT_DELAY}}}"
 
 [Panel]
 {{{PANEL_NAME}}} = script-name=IPPure 信息面板,update-interval={{{UPDATE_INTERVAL}}}
