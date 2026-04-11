@@ -1,5 +1,4 @@
-#!name =  iRingo: 📍 Location-self
-#!name =  iRingo: 📍 LocationService-self
+#!name =  iRingo: 📍 LocationService-self
 #!desc = 自定义定位服务内容\n添加国际版功能\n自定义服务版本\nDIRECT已替换为US节点
 #!openUrl = http://boxjs.com/#/app/iRingo.LocationService
 #!author = VirgilClyne[https://github.com/VirgilClyne]
