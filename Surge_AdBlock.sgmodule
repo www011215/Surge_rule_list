@@ -70,9 +70,9 @@ mi.gdt.qq.com = reject
 ^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.alibaba\.advertisementservice\.getadv - reject-dict
 ^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.etao\.noah\.query\/.+tao_splash - reject-dict
 
-# 京东开屏（functionId=start 允许后跟其他参数）
-^https?:\/\/api\.m\.jd\.com\/client\.action\?functionId=start(&|$) - reject-array
-^https?:\/\/api\.m\.jd\.com\/client\.action\?functionId=(queryMaterialAdverts|home_launchConfig|getWidgetV1052)(&|$) - reject-dict
+# 京东开屏（functionId 允许出现在 query 任意位置）
+^https?:\/\/api\.m\.jd\.com\/client\.action\?(.*&)?functionId=start(&|$) - reject-array
+^https?:\/\/api\.m\.jd\.com\/client\.action\?(.*&)?functionId=(queryMaterialAdverts|home_launchConfig|getWidgetV1052)(&|$) - reject-dict
 ^https?:\/\/(bdsp-x|dsp-x)\.jd\.com\/adx\/ - reject
 
 # 知乎开屏 / 信息流
@@ -84,7 +84,7 @@ mi.gdt.qq.com = reject
 ^https?:\/\/interface\d?\.music\.163\.com\/(w?e?)api\/ad\/ - reject-dict
 
 [MITM]
-hostname = %APPEND% *.googlesyndication.com, *.googleadservices.com, *.doubleclick.net, *.google-analytics.com, *.googletagmanager.com, graph.facebook.com, connect.facebook.net, cpro.baidu.com, pos.baidu.com, *.mmstat.com, *.tanx.com, *.umeng.com, *.umengcloud.com, api.bilibili.com, app.bilibili.com, manga.bilibili.com, sdkapp.uve.weibo.com, new.uve.weibo.com, adimg.uve.weibo.com, weibointl.api.weibo.cn, weibointl.api.weibo.com, tqt.weibo.cn, gw.alicdn.com, heic.alicdn.com, acs.m.taobao.com, api.m.jd.com, bdsp-x.jd.com, dsp-x.jd.com, api.zhihu.com, iadmusicmat.music.126.net, interface*.music.163.com
+hostname = %APPEND% *.googlesyndication.com, *.googleadservices.com, *.doubleclick.net, *.google-analytics.com, *.googletagmanager.com, graph.facebook.com, connect.facebook.net, cpro.baidu.com, pos.baidu.com, *.mmstat.com, *.tanx.com, *.umeng.com, *.umengcloud.com, api.bilibili.com, app.bilibili.com, manga.bilibili.com, sdkapp.uve.weibo.com, new.uve.weibo.com, adimg.uve.weibo.com, weibointl.api.weibo.cn, weibointl.api.weibo.com, tqt.weibo.cn, gw.alicdn.com, heic.alicdn.com, acs.m.taobao.com, api.m.jd.com, bdsp-x.jd.com, dsp-x.jd.com, api.zhihu.com, iadmusicmat.music.126.net, interface.music.163.com, interface*.music.163.com
 h2 = true
 tcp-connection = true
 auto-quic-block = false
