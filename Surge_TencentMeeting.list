@@ -1,27 +1,191 @@
 #Surge_TencentMeeting.list___________________________
 # NAME: TencentMeeting (腾讯会议)
 # REPO: https://github.com/www011215/Surge_rule_list
-# DESC: Route Tencent Meeting traffic to DIRECT so signaling / media stay inside CN.
-#       Every entry below was verified to appear in /Applications/TencentMeeting.app
-#       binaries (3.43.10.444) via `grep -r`, or observed live as a direct media
-#       endpoint of PID TencentMeeting during a capture session.
+# DESC: Route Tencent Meeting traffic to DIRECT so signaling / media stay
+#       inside CN. Domains and IPs are merged from:
+#         (a) verified strings inside /Applications/TencentMeeting.app/
+#             (3.43.10.444 framework binaries),
+#         (b) Surge virtual-IP DB observations on a live PID,
+#         (c) Tencent Meeting official firewall whitelist
+#             (https://meeting.tencent.com/support/topic/1929/).
+# DESC: 故意排除的共享基础设施（避免误伤其他腾讯系产品）：
+#       *.weixin.qq.com / *.wx.qq.com / mp.weixin.qq.com (微信登录共享)
+#       captcha.qq.com / *.gtimg.com (通用验证码)
+#       account/identity/workspace/oneid.tencent.com (腾讯统一身份)
+#       *.qpic.cn / *.myqcloud.com 全量 SUFFIX (CDN 共享给海量租户)
+#       *.tim.qq.com / *.imtt.qq.com (TIM SDK 共享)
 # PROCESS-NAME: 1 (macOS only; Surge for iOS ignores PROCESS-NAME)
-# DOMAIN: 3
-# DOMAIN-SUFFIX: 8
-# IP-CIDR: 2
-# TOTAL: 14
+# DOMAIN: 5
+# DOMAIN-SUFFIX: 11
+# IP-CIDR: 114
+# TOTAL: 131
 
 PROCESS-NAME,/Applications/TencentMeeting.app/
+
+# --- DOMAIN: TencentMeeting-exclusive subdomains under shared parents ---
 DOMAIN,down-30005.sz.gfp.tencent-cloud.com
-DOMAIN,work.medialab.qq.com
 DOMAIN,yun.tim.qq.com
+DOMAIN,tencentmeeting.txdocs.qq.com
+DOMAIN,meeting-75420.gzc.vod.tencent-cloud.com
+DOMAIN,wemeetvirtualbg-75586.gzc.vod.tencent-cloud.com
+
+# --- DOMAIN-SUFFIX: TencentMeeting private domains ---
 DOMAIN-SUFFIX,meeting.tencent.com
 DOMAIN-SUFFIX,meeting.qq.com
 DOMAIN-SUFFIX,wemeet.tencent.com
 DOMAIN-SUFFIX,wemeet.qq.com
+DOMAIN-SUFFIX,tencentmeeting.cn
+DOMAIN-SUFFIX,voovmeeting.com
+DOMAIN-SUFFIX,medialab.qq.com
 DOMAIN-SUFFIX,im.qcloud.com
 DOMAIN-SUFFIX,prtc.tencent.com
 DOMAIN-SUFFIX,picgzc.qpic.cn
 DOMAIN-SUFFIX,pictestsz.qpic.cn
+
+# --- IP-CIDR: Anycast / core service IPs (TencentMeeting infra) ---
+IP-CIDR,162.14.14.150/32,no-resolve
+IP-CIDR,162.14.10.152/32,no-resolve
+IP-CIDR,162.14.16.143/32,no-resolve
+IP-CIDR,162.14.16.201/32,no-resolve
+IP-CIDR,162.14.17.179/32,no-resolve
+IP-CIDR,162.14.18.121/32,no-resolve
+IP-CIDR,183.232.95.158/32,no-resolve
+IP-CIDR,162.14.6.247/32,no-resolve
+IP-CIDR,162.14.3.158/32,no-resolve
+IP-CIDR,162.14.20.29/32,no-resolve
+IP-CIDR,162.14.17.124/32,no-resolve
+IP-CIDR,162.14.16.78/32,no-resolve
+IP-CIDR,162.14.22.250/32,no-resolve
+IP-CIDR,162.14.20.89/32,no-resolve
+IP-CIDR,162.14.21.57/32,no-resolve
+IP-CIDR,162.14.11.250/32,no-resolve
+IP-CIDR,162.14.11.154/32,no-resolve
+
+# --- IP-CIDR: Live-captured media endpoints (PID TencentMeeting) ---
 IP-CIDR,120.53.97.228/32,no-resolve
 IP-CIDR,175.178.32.21/32,no-resolve
+
+# --- IP-CIDR: Disaster-recovery IPs ---
+IP-CIDR,81.69.145.60/32,no-resolve
+IP-CIDR,110.40.162.240/32,no-resolve
+IP-CIDR,110.40.162.147/32,no-resolve
+IP-CIDR,101.35.76.199/32,no-resolve
+
+# --- IP-CIDR: A/V media nodes - Shanghai ---
+IP-CIDR,81.69.54.0/24,no-resolve
+IP-CIDR,124.223.125.0/24,no-resolve
+IP-CIDR,124.223.120.0/24,no-resolve
+IP-CIDR,175.24.208.0/24,no-resolve
+
+# --- IP-CIDR: A/V media nodes - Beijing ---
+IP-CIDR,120.53.198.0/24,no-resolve
+
+# --- IP-CIDR: A/V media nodes - Nanjing ---
+IP-CIDR,180.109.159.0/24,no-resolve
+IP-CIDR,180.102.109.0/24,no-resolve
+IP-CIDR,180.109.171.0/24,no-resolve
+IP-CIDR,153.3.247.0/24,no-resolve
+IP-CIDR,112.86.241.0/24,no-resolve
+IP-CIDR,182.50.10.0/24,no-resolve
+IP-CIDR,36.155.234.0/24,no-resolve
+IP-CIDR,36.155.197.0/24,no-resolve
+IP-CIDR,36.155.229.0/24,no-resolve
+IP-CIDR,43.137.59.0/24,no-resolve
+IP-CIDR,1.13.155.0/24,no-resolve
+IP-CIDR,119.45.68.0/24,no-resolve
+
+# --- IP-CIDR: A/V media nodes - Tianjin ---
+IP-CIDR,42.81.181.0/24,no-resolve
+IP-CIDR,123.151.54.0/24,no-resolve
+IP-CIDR,123.151.69.0/24,no-resolve
+IP-CIDR,116.130.228.0/24,no-resolve
+IP-CIDR,125.39.3.0/24,no-resolve
+IP-CIDR,116.130.229.0/24,no-resolve
+IP-CIDR,111.33.183.0/24,no-resolve
+IP-CIDR,111.31.200.0/24,no-resolve
+IP-CIDR,111.30.182.0/24,no-resolve
+IP-CIDR,42.187.184.0/24,no-resolve
+IP-CIDR,109.244.170.0/24,no-resolve
+IP-CIDR,109.244.244.0/24,no-resolve
+
+# --- IP-CIDR: A/V media nodes - Guangzhou ---
+IP-CIDR,113.108.237.0/24,no-resolve
+IP-CIDR,14.29.105.0/24,no-resolve
+IP-CIDR,183.47.113.0/24,no-resolve
+IP-CIDR,157.255.5.0/24,no-resolve
+IP-CIDR,157.148.37.0/24,no-resolve
+IP-CIDR,120.241.138.0/24,no-resolve
+IP-CIDR,120.233.20.0/24,no-resolve
+IP-CIDR,120.241.149.0/24,no-resolve
+IP-CIDR,42.194.252.0/24,no-resolve
+IP-CIDR,106.52.7.0/24,no-resolve
+IP-CIDR,109.244.131.0/24,no-resolve
+
+# --- IP-CIDR: A/V media nodes - Hangzhou ---
+IP-CIDR,115.236.134.0/24,no-resolve
+IP-CIDR,101.67.6.0/24,no-resolve
+IP-CIDR,183.247.246.0/24,no-resolve
+
+# --- IP-CIDR: A/V media nodes - Shenyang ---
+IP-CIDR,123.184.80.0/24,no-resolve
+IP-CIDR,123.184.81.0/24,no-resolve
+IP-CIDR,124.95.224.0/24,no-resolve
+IP-CIDR,124.95.225.0/24,no-resolve
+IP-CIDR,120.201.8.0/24,no-resolve
+IP-CIDR,120.201.9.0/24,no-resolve
+
+# --- IP-CIDR: A/V media nodes - Jinan ---
+IP-CIDR,140.249.80.0/24,no-resolve
+IP-CIDR,140.249.77.0/24,no-resolve
+IP-CIDR,140.249.70.0/24,no-resolve
+IP-CIDR,119.188.28.0/24,no-resolve
+IP-CIDR,61.179.132.0/24,no-resolve
+IP-CIDR,120.223.250.0/24,no-resolve
+IP-CIDR,120.221.171.0/24,no-resolve
+
+# --- IP-CIDR: A/V media nodes - Shijiazhuang ---
+IP-CIDR,106.119.176.0/24,no-resolve
+IP-CIDR,106.119.181.0/24,no-resolve
+IP-CIDR,218.12.97.0/24,no-resolve
+IP-CIDR,218.12.106.0/24,no-resolve
+IP-CIDR,111.62.148.0/24,no-resolve
+IP-CIDR,111.62.154.0/24,no-resolve
+
+# --- IP-CIDR: A/V media nodes - Fuzhou ---
+IP-CIDR,27.155.118.0/24,no-resolve
+IP-CIDR,222.79.113.0/24,no-resolve
+IP-CIDR,36.248.45.0/24,no-resolve
+IP-CIDR,36.248.11.0/24,no-resolve
+IP-CIDR,112.49.56.0/24,no-resolve
+IP-CIDR,112.49.67.0/24,no-resolve
+
+# --- IP-CIDR: A/V media nodes - Chongqing ---
+IP-CIDR,113.249.145.0/24,no-resolve
+IP-CIDR,113.250.24.0/24,no-resolve
+IP-CIDR,113.249.150.0/24,no-resolve
+IP-CIDR,58.144.164.0/24,no-resolve
+IP-CIDR,58.144.181.0/24,no-resolve
+IP-CIDR,58.144.163.0/24,no-resolve
+IP-CIDR,221.178.66.0/24,no-resolve
+IP-CIDR,111.10.12.0/24,no-resolve
+IP-CIDR,221.178.13.0/24,no-resolve
+IP-CIDR,139.186.105.0/24,no-resolve
+IP-CIDR,139.186.239.0/24,no-resolve
+
+# --- IP-CIDR: A/V media nodes - Changsha ---
+IP-CIDR,175.6.90.0/24,no-resolve
+IP-CIDR,175.6.91.0/24,no-resolve
+IP-CIDR,116.162.35.0/24,no-resolve
+IP-CIDR,116.162.36.0/24,no-resolve
+IP-CIDR,36.158.246.0/24,no-resolve
+IP-CIDR,36.158.247.0/24,no-resolve
+
+# --- IP-CIDR: A/V media nodes - Hong Kong ---
+IP-CIDR,129.226.103.0/24,no-resolve
+IP-CIDR,43.135.105.0/24,no-resolve
+IP-CIDR,43.129.254.0/24,no-resolve
+
+# --- IP-CIDR: A/V media nodes - Taiwan ---
+IP-CIDR,175.97.145.0/24,no-resolve
+IP-CIDR,175.97.144.0/24,no-resolve
+IP-CIDR,175.99.23.0/24,no-resolve
