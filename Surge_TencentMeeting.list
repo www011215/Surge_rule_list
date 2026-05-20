@@ -1,0 +1,28 @@
+#Surge_TencentMeeting.list___________________________
+# NAME: TencentMeeting (腾讯会议)
+# REPO: https://github.com/www011215/Surge_rule_list
+# DESC: Route Tencent Meeting traffic to DIRECT so signaling / media stay inside CN.
+#       Domains were enumerated from a Surge virtual-IP database snapshot taken on
+#       macOS while TencentMeeting 3.43.10.444 was running (PID 76010 captured live).
+# DOMAIN: 5
+# DOMAIN-SUFFIX: 8
+# IP-CIDR: 2
+# PROCESS-NAME: 1 (macOS only; Surge for iOS ignores PROCESS-NAME)
+# TOTAL: 16
+
+DOMAIN,ins-8y4ghcjp.ias.tencent-cloud.net
+DOMAIN,down-30005.sz.gfp.tencent-cloud.com
+DOMAIN,work.medialab.qq.com
+DOMAIN,tcloud.tim.qq.com
+DOMAIN,yun.tim.qq.com
+DOMAIN-SUFFIX,meeting.tencent.com
+DOMAIN-SUFFIX,meeting.qq.com
+DOMAIN-SUFFIX,wemeet.tencent.com
+DOMAIN-SUFFIX,wemeet.qq.com
+DOMAIN-SUFFIX,im.qcloud.com
+DOMAIN-SUFFIX,prtc.tencent.com
+DOMAIN-SUFFIX,picgzc.qpic.cn
+DOMAIN-SUFFIX,pictestsz.qpic.cn
+IP-CIDR,120.53.97.228/32,no-resolve
+IP-CIDR,175.178.32.21/32,no-resolve
+PROCESS-NAME,/Applications/TencentMeeting.app/
