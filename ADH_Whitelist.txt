@@ -1,0 +1,82 @@
+!
+! Title:        ADH Whitelist (Adobe / Apple / etc.)
+! Description:  Personal AdGuard Home allowlist — overrides aggressive public
+!               blocklists (OISD Big, Hagezi Pro, blackmatrix7, Cats-Team,
+!               217heidai, StevenBlack, AdGuard DNS filter, etc.) that
+!               over-block legitimate first-party services.
+! Homepage:     https://github.com/www011215/Surge_rule_list
+! Last update:  2026-05-22
+!
+! ─── HOW TO USE ───
+! In AdGuard Home → Filters → DNS blocklists, click "Add blocklist" → "Add a custom list"
+! and paste this URL:
+!   https://raw.githubusercontent.com/www011215/Surge_rule_list/main/ADH_Whitelist.txt
+!
+! Rules use `@@||domain^$important` format, which works whether the list is
+! loaded as a DNS blocklist OR pasted into "Custom filtering rules".
+! `$important` forces the allow rule to win against any `$important` block rule
+! coming from upstream lists.
+!
+! ─── SYNTAX REMINDERS ───
+! @@||example.com^             allow example.com and all its subdomains
+! @@||example.com^$important   same, but overrides $important block rules too
+! !                            comment
+!
+
+
+! ╔══════════════════════════════════════════════════════════════╗
+! ║                          ADOBE                                ║
+! ╚══════════════════════════════════════════════════════════════╝
+! Public blocklists pull in "crack Adobe" hosts files that nuke licensing
+! and geo endpoints, breaking adobe.com page loads and Creative Cloud
+! Desktop activation for legitimate users.
+
+! --- Critical: adobe.com webpages won't render without these ---
+@@||geo.adobe.com^$important
+@@||geo2.adobe.com^$important
+@@||edge.adobedc.net^$important
+@@||detect-ccd.creativecloud.adobe.com^$important
+@@||get3.adobe.com^$important
+@@||ns.adobe.com^$important
+
+! --- Creative Cloud / Photoshop / Premiere / etc. activation & licensing ---
+@@||practivate.adobe.com^$important
+@@||activate.adobe.com^$important
+@@||activate-sea.adobe.com^$important
+@@||activate-sjc0.adobe.com^$important
+@@||lm.licenses.adobe.com^$important
+@@||lmlicenses.wip4.adobe.com^$important
+@@||na1r.services.adobe.com^$important
+@@||na2m-pr.licenses.adobe.com^$important
+@@||3dns.adobe.com^$important
+@@||3dns-1.adobe.com^$important
+@@||3dns-2.adobe.com^$important
+@@||3dns-3.adobe.com^$important
+@@||3dns-4.adobe.com^$important
+@@||adobe-dns.adobe.com^$important
+@@||adobe-dns-2.adobe.com^$important
+@@||adobe-dns-3.adobe.com^$important
+@@||wip3.adobe.com^$important
+@@||hlrcv.stage.adobe.com^$important
+@@||adelogs.adobe.com^$important
+@@||ereg.adobe.com^$important
+
+! --- Adobe Fonts (Typekit) — keep these unblocked or webfonts break ---
+@@||use.typekit.net^$important
+@@||p.typekit.net^$important
+@@||fonts.adobe.com^$important
+@@||use.typekit.com^$important
+
+
+! ╔══════════════════════════════════════════════════════════════╗
+! ║                          APPLE                                ║
+! ╚══════════════════════════════════════════════════════════════╝
+! Currently most Apple breakage in upstream blocklists is cosmetic-only
+! (##) and doesn't affect AGH DNS-level filtering. The one real DNS block
+! is doh.dns.apple.com — only matters if you use iCloud Private Relay.
+
+! --- iCloud Private Relay DoH endpoint (uncomment if you use Private Relay) ---
+! @@||doh.dns.apple.com^$important
+! @@||mask.icloud.com^$important
+! @@||mask-h2.icloud.com^$important
+! @@||mask-api.icloud.com^$important
