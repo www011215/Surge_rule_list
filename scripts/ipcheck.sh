@@ -71,7 +71,7 @@ fetch() { # $1=family(4/6) $2=url [extra args...]
 have_v6() { curl -6 -s -m 4 -o /dev/null -w "%{http_code}" https://[2606:4700:4700::1111]/ 2>/dev/null | grep -qE '^[2-4][0-9][0-9]$'; }
 
 # ============================================================================
-hdr "ipcheck v1.3  ·  $(date '+%F %T %Z')  ·  $(hostname)"
+hdr "ipcheck v1.4  ·  $(date '+%F %T %Z')  ·  $(hostname)"
 
 V6_OK=0; have_v6 && V6_OK=1
 [ "$MODE" = "A" ] || echo "(mode: v${MODE} only)"
@@ -80,6 +80,53 @@ if [ $V6_OK -eq 0 ] && { [ "$MODE" = "A" ] || [ "$MODE" = "6" ]; }; then
   [ "$MODE" = "6" ] && exit 1
   MODE=4
 fi
+
+# ============================================================================
+hdr "IP reputation (IPPure · my.ippure.com)"
+# Full IP profile incl. fraud/risk score + residential-vs-datacenter. Per family.
+
+ippure() { # $1 = family (4/6)
+  local f=$1 j
+  j=$(curl -fsSL -$f -m 12 https://my.ippure.com/v1/info 2>/dev/null)
+  if [ -z "$j" ]; then warn "v$f IPPure" "no response (family unreachable?)"; return; fi
+  local ip=$(echo "$j" | jget ip)
+  local fs=$(echo "$j" | jget fraudScore)
+  local isr=$(echo "$j" | jget isResidential)
+  local isb=$(echo "$j" | jget isBroadcast)
+  local city=$(echo "$j" | jget city)
+  local region=$(echo "$j" | jget region)
+  local country=$(echo "$j" | jget country)
+  local cc=$(echo "$j" | jget countryCode)
+  local rc=$(echo "$j" | jget regionCode)
+  local lat=$(echo "$j" | jget latitude)
+  local lon=$(echo "$j" | jget longitude)
+  local tz=$(echo "$j" | jget timezone)
+  local zip=$(echo "$j" | jget postalCode)
+  local asn=$(echo "$j" | jget asn)
+  local org=$(echo "$j" | jget asOrganization)
+
+  ok "v$f IPPure IP" "$ip"
+  # fraud / risk score (lower = cleaner)
+  if [ -z "$fs" ] || ! echo "$fs" | grep -qE '^[0-9]+$'; then
+    info "  risk score" "N/A (not scored for this family)"
+  elif [ "$fs" -le 25 ]; then ok   "  risk score" "$fs/100  (clean)"
+  elif [ "$fs" -lt 75 ]; then warn "  risk score" "$fs/100  (suspicious)"
+  else                        bad  "  risk score" "$fs/100  (HIGH RISK)"
+  fi
+  # residential vs datacenter
+  if [ "$isr" = "True" ] || [ "$isr" = "true" ]; then
+    local b=""; { [ "$isb" = "True" ] || [ "$isb" = "true" ]; } && b="  | broadcast"
+    ok   "  IP type" "residential 🏠$b"
+  elif [ -n "$isr" ]; then
+    warn "  IP type" "datacenter / non-residential 🖥️"
+  fi
+  info "  geo" "$city, $region, $country  ($cc/$rc)"
+  info "  coords/tz" "$lat, $lon  ·  $tz  ·  ZIP $zip"
+  info "  ASN" "AS$asn  $org"
+}
+
+[ "$MODE" != "6" ] && ippure 4
+[ "$MODE" != "4" ] && [ $V6_OK -eq 1 ] && ippure 6
 
 # ============================================================================
 hdr "Identity (who do remote sites see you as?)"
