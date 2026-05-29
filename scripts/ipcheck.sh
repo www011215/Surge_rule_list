@@ -71,7 +71,7 @@ fetch() { # $1=family(4/6) $2=url [extra args...]
 have_v6() { curl -6 -s -m 4 -o /dev/null -w "%{http_code}" https://[2606:4700:4700::1111]/ 2>/dev/null | grep -qE '^[2-4][0-9][0-9]$'; }
 
 # ============================================================================
-hdr "ipcheck v1.2  ·  $(date '+%F %T %Z')  ·  $(hostname)"
+hdr "ipcheck v1.3  ·  $(date '+%F %T %Z')  ·  $(hostname)"
 
 V6_OK=0; have_v6 && V6_OK=1
 [ "$MODE" = "A" ] || echo "(mode: v${MODE} only)"
@@ -211,6 +211,61 @@ test_openai() {
 }
 [ "$MODE" != "6" ] && test_openai 4
 [ "$MODE" != "4" ] && [ $V6_OK -eq 1 ] && test_openai 6
+
+# ============================================================================
+hdr "AI services (Claude · ChatGPT · Gemini · Meta AI)"
+# Cloudflare-fronted AIs expose /cdn-cgi/trace → the exit IP the service actually
+# sees (→ v4/v6 family) + its geo region. Family is left to the OS so this reflects
+# the real egress→AI leg (e.g. wave's ipv6_first), not the client→egress hop.
+
+aitrace() { curl -s -m 12 -A "Mozilla/5.0" -H 'Accept-Language: en-US,en;q=0.9' "https://$1/cdn-cgi/trace" 2>/dev/null; }
+famof() { case "$1" in *:*) echo v6;; ?*) echo v4;; *) echo "?";; esac; }
+
+ai_cf() { # $1=label $2=host
+  local t ip loc colo
+  t=$(aitrace "$2")
+  ip=$(echo "$t"  | awk -F= '/^ip=/{print $2}')
+  loc=$(echo "$t" | awk -F= '/^loc=/{print $2}')
+  colo=$(echo "$t"| awk -F= '/^colo=/{print $2}')
+  if [ -z "$ip" ]; then bad "$1" "unreachable (no trace)"; return; fi
+  local msg="exit=$(famof "$ip")  region=$loc  CF=$colo  (seen-as $ip)"
+  if [ "$loc" = "CN" ]; then bad "$1" "region=CN ← 送中!  $msg"
+  else                       ok  "$1" "$msg"; fi
+}
+
+# --- Claude (priority) + ChatGPT — Cloudflare, full trace -----------------
+ai_cf "Claude API"  api.anthropic.com
+ai_cf "Claude.ai"   claude.ai
+ai_cf "ChatGPT web" chat.openai.com
+
+# --- ChatGPT availability (OpenAI compliance endpoint) --------------------
+cc=$(curl -s -m 10 -A "Mozilla/5.0" https://api.openai.com/compliance/cookie_requirements 2>/dev/null)
+if   echo "$cc" | grep -qi "unsupported_country"; then bad  "ChatGPT avail" "unsupported_country (blocked at this exit)"
+elif [ -n "$cc" ];                                 then ok  "ChatGPT avail" "supported region"
+else                                                    warn "ChatGPT avail" "(no signal)"; fi
+
+# --- Claude availability (claude.ai app vs geo-block) ---------------------
+cl=$(curl -s -m 10 -A "Mozilla/5.0" -H 'Accept-Language: en-US,en;q=0.9' https://claude.ai/ 2>/dev/null)
+if   echo "$cl" | grep -qiE "not available in your|isn't available|app-unavailable"; then bad  "Claude avail" "geo-blocked at this exit"
+elif echo "$cl" | grep -qiE "claude|anthropic"; then ok  "Claude avail" "reachable (app served)"
+else                                                  warn "Claude avail" "(could not determine)"; fi
+
+# --- Gemini (Google; not Cloudflare) — reachability + region best-effort --
+gtmp=$(curl -s -m 10 -A "Mozilla/5.0" -H 'Accept-Language: en-US,en;q=0.9' -w '\n__C__%{http_code}' https://gemini.google.com/app 2>/dev/null)
+gcode=${gtmp##*__C__}; gbody=${gtmp%$'\n'__C__*}
+if   echo "$gbody" | grep -qiE "not available in your (country|region)|isn't available"; then bad  "Gemini" "not available in region"
+elif [ "$gcode" = "200" ] || [ "$gcode" = "302" ] || [ "$gcode" = "303" ];               then ok   "Gemini" "reachable (HTTP $gcode)"
+else                                                                                           warn "Gemini" "HTTP $gcode (login/region wall — inconclusive)"; fi
+
+# --- Meta AI (Meta; not Cloudflare) — only select regions -----------------
+mtmp=$(curl -s -m 10 -A "Mozilla/5.0" -H 'Accept-Language: en-US,en;q=0.9' -w '\n__C__%{http_code}' https://www.meta.ai/ 2>/dev/null)
+mcode=${mtmp##*__C__}; mbody=${mtmp%$'\n'__C__*}
+if   echo "$mbody" | grep -qiE "not available|isn't available|not yet available|waitlist|unsupported"; then bad  "Meta AI" "not available in region"
+elif [ "$mcode" = "200" ];                                                                             then ok   "Meta AI" "reachable (HTTP $mcode)"
+else                                                                                                        warn "Meta AI" "HTTP $mcode (inconclusive)"; fi
+
+info "note" "Claude/ChatGPT show the real exit family+region (CF trace);"
+info ""     "Gemini/Meta AI are non-CF → reachability/region only (family set by egress policy)."
 
 # ============================================================================
 [ $SHORT -eq 1 ] && exit 0
