@@ -124,14 +124,38 @@ test_youtube() {
   body=$(fetch $f https://www.youtube.com/ $extra)
   local gl=$(echo "$body" | grep -oE '"INNERTUBE_CONTEXT_GL":"[^"]+"' | head -1 | cut -d'"' -f4)
   local cdn=$(echo "$body" | grep -oE 'rr[0-9]+---sn-[a-z0-9]+\.googlevideo\.com' | head -1 | sed 's/.*sn-//')
-  if [ -z "$gl" ]; then bad "v${f} YouTube" "(no region parsed; likely blocked)"
-  elif [ "$gl" = "US" ]; then ok "v${f} YouTube" "GL=$gl${cdn:+   CDN sn-$cdn}"
-  elif [ "$gl" = "CN" ]; then bad "v${f} YouTube" "GL=$gl ← geo-mislabeled (送中)"
-  else warn "v${f} YouTube" "GL=$gl"
+  if [ -z "$gl" ]; then bad "v${f} YouTube GL" "(no region parsed; likely blocked)"
+  elif [ "$gl" = "US" ]; then ok "v${f} YouTube GL" "GL=$gl${cdn:+   CDN sn-$cdn}"
+  elif [ "$gl" = "CN" ]; then bad "v${f} YouTube GL" "GL=$gl ← geo-mislabeled (送中)"
+  else warn "v${f} YouTube GL" "GL=$gl"
   fi
 }
 [ "$MODE" != "6" ] && test_youtube 4
 [ "$MODE" != "4" ] && [ $V6_OK -eq 1 ] && test_youtube 6
+
+# --- YouTube Premium availability ---------------------------------------------
+# The DEFINITIVE signal. Premium uses a SEPARATE, stricter geo database than the
+# homepage GL — an IP can show GL=US yet still fail Premium ("not available in
+# your country"). This is exactly what bit the Cox v6 prefix: GL=US but Premium
+# rejected. Always trust this over the GL field above.
+test_yt_premium() {
+  local f=$1 extra=""
+  if [ $f = 6 ]; then
+    local ip=$(resolve_aaaa www.youtube.com)
+    [ -z "$ip" ] && { bad "v6 YT Premium" "no AAAA upstream"; return; }
+    extra="--resolve www.youtube.com:443:[$ip]"
+  fi
+  local page=$(fetch $f https://www.youtube.com/premium $extra)
+  if echo "$page" | grep -qiE "not available in your (country|location|region)|isn.t available in your"; then
+    bad  "v${f} YT Premium" "NOT available ← Premium geo rejects this IP (送中)"
+  elif echo "$page" | grep -qiE "INNERTUBE_CONTEXT_GL"; then
+    ok   "v${f} YT Premium" "available (no region rejection)"
+  else
+    warn "v${f} YT Premium" "(could not determine)"
+  fi
+}
+[ "$MODE" != "6" ] && test_yt_premium 4
+[ "$MODE" != "4" ] && [ $V6_OK -eq 1 ] && test_yt_premium 6
 
 # --- Netflix --------------------------------------------------------
 # title 81280792 = Squid Game S2 (US-licensed); CN catalog doesn't have Netflix at all
