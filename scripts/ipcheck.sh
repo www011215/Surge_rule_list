@@ -2,8 +2,10 @@
 # ipcheck.sh — focused IP-quality + streaming-region checker
 #
 # Designed for VPS used as a proxy egress (snell / shadowsocks / etc).
-# Tests v4 AND v6 paths separately, then verifies any active smartdns
-# IP-family-forcing rules (Meta→v6, Google→v4) are working.
+# Tests v4 AND v6 paths separately, then runs a ROLE-AWARE DNS audit:
+#   - on an unlock CLIENT  : checks AI/Google/Meta rewrite to the egress IP
+#   - on the unlock EGRESS : checks smartdns force-family rules (Meta v6, Google v4)
+# Auto-detects role and the egress IP at runtime (no hardcoded addresses).
 #
 # Run on the egress VPS:
 #   bash <(curl -fsSL https://raw.githubusercontent.com/www011215/Surge_rule_list/main/scripts/ipcheck.sh)
@@ -69,7 +71,7 @@ fetch() { # $1=family(4/6) $2=url [extra args...]
 have_v6() { curl -6 -s -m 4 -o /dev/null -w "%{http_code}" https://[2606:4700:4700::1111]/ 2>/dev/null | grep -qE '^[2-4][0-9][0-9]$'; }
 
 # ============================================================================
-hdr "ipcheck v1.0  ·  $(date '+%F %T %Z')  ·  $(hostname)"
+hdr "ipcheck v1.2  ·  $(date '+%F %T %Z')  ·  $(hostname)"
 
 V6_OK=0; have_v6 && V6_OK=1
 [ "$MODE" = "A" ] || echo "(mode: v${MODE} only)"
@@ -212,53 +214,96 @@ test_openai() {
 
 # ============================================================================
 [ $SHORT -eq 1 ] && exit 0
-hdr "Local DNS rule verification  (smartdns force-family rules)"
+hdr "Local DNS policy verification (role-aware)"
 
 if ! dig @127.0.0.1 . SOA +time=1 +tries=1 +short > /dev/null 2>&1; then
-  warn "smartdns" "127.0.0.1:53 not responding — skipping rule audit"
+  warn "smartdns" "127.0.0.1:53 not responding — skipping audit"
   exit 0
 fi
 
-# Domains that SHOULD be forced to v6 only (A empty, AAAA present)
-META=(www.facebook.com www.instagram.com www.threads.net www.whatsapp.com www.fbsbx.com graph.facebook.com)
-# Domains that SHOULD be forced to v4 only (AAAA empty, A present)
-GOOG=(www.youtube.com www.google.com i.ytimg.com lh3.googleusercontent.com)
-
-probe() { # $1=domain  → echoes "A:<val> AAAA:<val>"
+probe() { # $1=domain -> "A AAAA"  ('_' when empty)
   local d=$1
   local a=$(dig @127.0.0.1 A "$d" +short +time=2 +tries=1 2>/dev/null | grep -E '^[0-9.]+$' | head -1)
   local aaaa=$(dig @127.0.0.1 AAAA "$d" +short +time=2 +tries=1 2>/dev/null | grep -E '^[0-9a-f:]+$' | head -1)
   echo "${a:-_} ${aaaa:-_}"
 }
 
-echo "  Meta domains (expect: A empty, AAAA present → force v6):"
-for d in "${META[@]}"; do
-  read a aaaa < <(probe "$d")
-  if [ "$a" = "_" ] && [ "$aaaa" != "_" ]; then
-    ok "$d" "→ $aaaa"
-  elif [ "$a" != "_" ] && [ "$aaaa" != "_" ]; then
-    warn "$d" "BOTH A=$a + AAAA=$aaaa  (rule not applied?)"
-  elif [ "$a" != "_" ]; then
-    bad "$d" "A=$a, no AAAA (going via v4!)"
-  else
-    bad "$d" "no records at all"
-  fi
-done
+# --- Detect role from how the local resolver answers (no hardcoded IPs) -------
+#   client : an unlock ORIGIN (AI/Google/Meta rewritten to one egress IP)
+#   egress : the unlock EGRESS (smartdns force-family rules active: Meta v6, Google v4)
+#   plain  : neither
+read a1 _ < <(probe api.anthropic.com)
+read a2 _ < <(probe chat.openai.com)
+read fa faaaa < <(probe www.facebook.com)
+ROLE=plain; UNLOCK_IP=""
+if [ "$a1" != "_" ] && [ "$a1" = "$a2" ]; then
+  ROLE=client; UNLOCK_IP=$a1
+elif [ "$fa" = "_" ] && [ "$faaaa" != "_" ]; then
+  ROLE=egress
+fi
+info "detected role" "$ROLE${UNLOCK_IP:+  (unlock egress = $UNLOCK_IP)}"
 
-echo
-echo "  Google domains (expect: A present, AAAA empty → force v4):"
-for d in "${GOOG[@]}"; do
-  read a aaaa < <(probe "$d")
-  if [ "$a" != "_" ] && [ "$aaaa" = "_" ]; then
-    ok "$d" "→ $a"
-  elif [ "$a" != "_" ] && [ "$aaaa" != "_" ]; then
-    warn "$d" "BOTH A=$a + AAAA=$aaaa  (rule not applied?)"
-  elif [ "$aaaa" != "_" ]; then
-    bad "$d" "AAAA=$aaaa, no A (going via v6!)"
-  else
-    bad "$d" "no records at all"
+if [ "$ROLE" = "client" ]; then
+  echo
+  echo "  Unlocked domains (expect -> egress, A only; client->egress leg is v4 by design):"
+  for d in api.anthropic.com chat.openai.com www.google.com drive.google.com \
+           www.facebook.com www.instagram.com www.icloud.com music.apple.com; do
+    read a aaaa < <(probe "$d")
+    if   [ "$a" = "$UNLOCK_IP" ]; then ok   "$d" "-> egress"
+    elif [ "$a" != "_" ];        then warn "$d" "-> $a (not unlocked)"
+    else                              bad  "$d" "no A record"; fi
+  done
+  echo
+  echo "  Deliberately NOT unlocked (expect real IP, HK direct):"
+  for d in www.youtube.com i.ytimg.com; do
+    read a aaaa < <(probe "$d")
+    if   [ "$a" = "$UNLOCK_IP" ]; then bad "$d" "-> egress! (should be direct)"
+    elif [ "$a" != "_" ];        then ok  "$d" "-> direct ($a)"
+    else                              warn "$d" "no A"; fi
+  done
+  echo
+  info "note" "A-only is CORRECT: client reaches egress over v4 (-> DNAT -> sniproxy)."
+  info ""     "Any IPv6 selection happens on the egress->upstream leg, invisible here."
+  echo
+  echo "  Geo-mislabel (送中) check — does the egress pass YouTube Premium? (real signal):"
+  if [ -n "$UNLOCK_IP" ]; then
+    pg=$(curl -fsSL -m 15 -A "Mozilla/5.0" -H 'Accept-Language: en-US,en;q=0.9' \
+         --resolve www.youtube.com:443:"$UNLOCK_IP" https://www.youtube.com/premium 2>/dev/null)
+    if   echo "$pg" | grep -qiE "not available in your (country|location|region)|isn.t available in your"; then
+      bad  "egress YT Premium" "NOT available <- egress 送中"
+    elif echo "$pg" | grep -qiE "INNERTUBE_CONTEXT_GL"; then
+      ok   "egress YT Premium" "available (egress not 送中)"
+    else
+      warn "egress YT Premium" "(could not determine)"
+    fi
   fi
-done
+
+elif [ "$ROLE" = "egress" ]; then
+  echo "  (smartdns force-family rules: Meta->v6, Google->v4)"
+  META=(www.facebook.com www.instagram.com www.threads.net www.whatsapp.com www.fbsbx.com graph.facebook.com)
+  GOOG=(www.youtube.com www.google.com i.ytimg.com lh3.googleusercontent.com)
+  echo
+  echo "  Meta domains (expect: A empty, AAAA present -> force v6):"
+  for d in "${META[@]}"; do
+    read a aaaa < <(probe "$d")
+    if   [ "$a" = "_" ] && [ "$aaaa" != "_" ]; then ok   "$d" "-> $aaaa"
+    elif [ "$a" != "_" ] && [ "$aaaa" != "_" ]; then warn "$d" "BOTH A=$a + AAAA=$aaaa (rule not applied?)"
+    elif [ "$a" != "_" ];                       then bad  "$d" "A=$a, no AAAA (going via v4!)"
+    else                                             bad  "$d" "no records"; fi
+  done
+  echo
+  echo "  Google domains (expect: A present, AAAA empty -> force v4):"
+  for d in "${GOOG[@]}"; do
+    read a aaaa < <(probe "$d")
+    if   [ "$a" != "_" ] && [ "$aaaa" = "_" ]; then ok   "$d" "-> $a"
+    elif [ "$a" != "_" ] && [ "$aaaa" != "_" ]; then warn "$d" "BOTH A=$a + AAAA=$aaaa (rule not applied?)"
+    elif [ "$aaaa" != "_" ];                    then bad  "$d" "AAAA=$aaaa, no A (v6 -> Premium 送中 risk!)"
+    else                                             bad  "$d" "no records"; fi
+  done
+
+else
+  warn "policy" "neither unlock-client nor force-family egress detected — skipping audit"
+fi
 
 echo
 hdr "Done · re-run anytime: bash <(curl -fsSL https://raw.githubusercontent.com/www011215/Surge_rule_list/main/scripts/ipcheck.sh)"
