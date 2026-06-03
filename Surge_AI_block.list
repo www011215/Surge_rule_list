@@ -1,0 +1,9 @@
+# Surge_AI_block.list — AI/Claude tracking & telemetry to DROP (not unlock).
+# Consumed two ways:
+#   1) gomami ai-domains-update.sh fetches this -> emits AGH block rules
+#      (||domain^$client=103.73.220.199), scoped to the Gomami client.
+#   2) (optional) reference in Surge as:  RULE-SET,<raw-url>,REJECT  to also drop at the Mac.
+# Format: Surge DOMAIN / DOMAIN-SUFFIX lines, one per line. # comments ok.
+#
+# Claude's Datadog LOG intake (us5) — pure telemetry; user opted to drop it (2026-06-03).
+DOMAIN,http-intake.logs.us5.datadoghq.com
