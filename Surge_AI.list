@@ -91,6 +91,15 @@ DOMAIN-SUFFIX,claudemcpcontent.com
 DOMAIN,servd-anthropic-website.b-cdn.net
 DOMAIN,anthropic-com.ghost.io
 DOMAIN,browser-intake-us5-datadoghq.com
+# --- added 2026-06-03 round 2 ("多放不能漏": multi-source + Anthropic official init-firewall.sh / network-config / data-usage audit; all dig-verified) ---
+DOMAIN-SUFFIX,anthropic.ai
+DOMAIN-SUFFIX,anthropic.org
+DOMAIN-SUFFIX,claudeai.com
+DOMAIN-SUFFIX,statsig.com
+DOMAIN-SUFFIX,statsigapi.net
+DOMAIN-SUFFIX,featureassets.org
+DOMAIN,session-replay-datadoghq.com
+DOMAIN,anthropic.com.cdn.cloudflare.net
 PROCESS-NAME,claude
 PROCESS-NAME,/Applications/Claude.app/
 PROCESS-NAME,/opt/homebrew/Caskroom/claude-code/2.0.14/claude
