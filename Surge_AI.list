@@ -102,6 +102,8 @@ DOMAIN,session-replay-datadoghq.com
 DOMAIN,anthropic.com.cdn.cloudflare.net
 # claudecontent.com — NOT confirmed Anthropic (currently resolves to a parking IP 162.255.119.52, i.e. a squatter); added 2026-06-03 as a defensive "in case Anthropic ever acquires it" entry at user's explicit request
 DOMAIN-SUFFIX,claudecontent.com
+# http-intake.logs.us5.datadoghq.com — Claude's Datadog LOG intake (us5 site); observed live in Surge dump 2026-06-03, was being 0.0.0.0-blocked at gomami → added for exit consistency with browser-intake-us5 (both → wave)
+DOMAIN,http-intake.logs.us5.datadoghq.com
 PROCESS-NAME,claude
 PROCESS-NAME,/Applications/Claude.app/
 PROCESS-NAME,/opt/homebrew/Caskroom/claude-code/2.0.14/claude
