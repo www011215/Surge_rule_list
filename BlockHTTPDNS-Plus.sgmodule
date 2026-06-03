@@ -1,10 +1,10 @@
 #!name=BlockHTTPDNS-Plus
-#!desc=HTTPDNS 拦截增强：静态兜底 + 自动更新 RULE-SET，强制 App 回退系统 DNS 受 Surge 接管
+#!desc=HTTPDNS 拦截增强：静态兜底（IP-CIDR/域名 REJECT）+ skk.moe 通用 REJECT 集（范围不止 HTTPDNS，含广告等，与 AdBlock 模块可能重叠）。全 REJECT 规则，无需开启 MITM。
 #!category=Network
 #!author=wwb
 
 [Rule]
-# 1. 自动更新社区 HTTPDNS/REJECT 集
+# 1. skk.moe 通用 REJECT 集（自动更新；非仅 HTTPDNS，含广告/隐私等，与 AdBlock 模块可能重叠）
 RULE-SET,https://ruleset.skk.moe/List/non_ip/reject.conf,REJECT,extended-matching,no-resolve
 RULE-SET,https://ruleset.skk.moe/List/ip/reject.conf,REJECT,no-resolve
 
@@ -20,5 +20,5 @@ DOMAIN,dns.weixin.qq.com,REJECT
 DOMAIN,dns.jd.com,REJECT
 DOMAIN,amdc.alipay.com,REJECT
 
-[MITM]
-hostname = %APPEND% 119.29.29.90, 119.29.29.98, 119.29.29.99
+# 说明：本模块全部为 REJECT 规则，119.29.29.90/.98/.99 已被上方 119.29.29.0/24 整段覆盖，
+# 无需 [MITM]（REJECT 在连接层生效，加 MITM 只会要求装证书并扩大解密范围，无实际作用）。
