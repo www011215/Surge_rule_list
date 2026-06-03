@@ -1,0 +1,24 @@
+#!name=BlockHTTPDNS-Plus
+#!desc=HTTPDNS 拦截增强：静态兜底 + 自动更新 RULE-SET，强制 App 回退系统 DNS 受 Surge 接管
+#!category=Network
+#!author=wwb
+
+[Rule]
+# 1. 自动更新社区 HTTPDNS/REJECT 集
+RULE-SET,https://ruleset.skk.moe/List/non_ip/reject.conf,REJECT,extended-matching,no-resolve
+RULE-SET,https://ruleset.skk.moe/List/ip/reject.conf,REJECT,no-resolve
+
+# 2. DNSPod/腾讯 HTTPDNS 整段兜底（含漏网的 119.29.29.90）
+IP-CIDR,119.29.29.0/24,REJECT,no-resolve
+
+# 3. 阿里云 HTTPDNS 兜底
+IP-CIDR,203.107.1.0/24,REJECT,no-resolve
+
+# 4. 常见 HTTPDNS 域名兜底（防 IP 漂移）
+DOMAIN-SUFFIX,httpdns.pro,REJECT
+DOMAIN,dns.weixin.qq.com,REJECT
+DOMAIN,dns.jd.com,REJECT
+DOMAIN,amdc.alipay.com,REJECT
+
+[MITM]
+hostname = %APPEND% 119.29.29.90, 119.29.29.98, 119.29.29.99
