@@ -19,14 +19,16 @@ DOMAIN-SUFFIX,claudeai.com
 DOMAIN-SUFFIX,statsig.com
 DOMAIN-SUFFIX,statsigapi.net
 DOMAIN-SUFFIX,featureassets.org
-# --- added 2026-06-14 (抓包 Mac App/CLI): growthbook 功能开关 CDN, 与 statsig 同类 ---
+# --- added 2026-06-14 (抓包 Mac App/CLI): 前端遥测/功能开关, 全部走 wave 放行以保出口 IP 一致性 ---
 DOMAIN-SUFFIX,growthbook.io
+DOMAIN,cdn.segment.com
+# http-intake.logs.us5.datadoghq.com: 2026-06-03 曾故意拦截(当 tracking drop), 2026-06-14 用户决定改为放行
+# —— 统一走 wave, 避免"屏蔽遥测"反而触发 Claude 风控; 已同步从 Surge_AI_block.list 移除
+DOMAIN,http-intake.logs.us5.datadoghq.com
 DOMAIN,session-replay-datadoghq.com
 DOMAIN,anthropic.com.cdn.cloudflare.net
 # claudecontent.com — NOT confirmed Anthropic (currently resolves to a parking IP 162.255.119.52, i.e. a squatter); added 2026-06-03 as a defensive "in case Anthropic ever acquires it" entry at user's explicit request
 DOMAIN-SUFFIX,claudecontent.com
-# NOTE: http-intake.logs.us5.datadoghq.com (Claude Datadog LOG intake) is intentionally NOT here —
-# it's DROPPED as tracking via gomami:/etc/smartdns/ai-domains-block.local (block rule, not unlocked). 2026-06-03.
 # ========== end Claude ==========
 PROCESS-NAME,/Applications/Antigravity.app/
 PROCESS-NAME,/Applications/Claude.app/

@@ -5,5 +5,6 @@
 #   2) (optional) reference in Surge as:  RULE-SET,<raw-url>,REJECT  to also drop at the Mac.
 # Format: Surge DOMAIN / DOMAIN-SUFFIX lines, one per line. # comments ok.
 #
-# Claude's Datadog LOG intake (us5) — pure telemetry; user opted to drop it (2026-06-03).
-DOMAIN,http-intake.logs.us5.datadoghq.com
+# (2026-06-14) 策略反转: 所有 Claude 遥测改为经 wave 放行(出口 IP 一致性/风控), 不再 DROP 任何遥测。
+# http-intake.logs.us5.datadoghq.com 已移到 Surge_AI.list 的解锁集。
+# 本 blocklist 目前为空(保留作为将来要 DROP 的 tracking 占位)。
