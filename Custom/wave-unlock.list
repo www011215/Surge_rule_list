@@ -1,0 +1,22 @@
+# ============================================================
+#  自定义解锁清单  →  全部转发到 wave 出口
+#  生效节点: gomami HKG + gomami LAX (sing-box 分流网关的 custom 类)
+# ------------------------------------------------------------
+#  用法: 一行写一个域名(裸域名即可)。该域名 + 它的所有子域
+#        都会被分流到 wave 出口。  # 或 ! 开头的行是注释,会被忽略。
+#
+#  生效方式(改完 push 后,二选一):
+#    1) 等 6 小时自动刷新
+#    2) 立刻刷新(在服务器执行):
+#         ssh gomami_hkg 'bash /usr/local/bin/singbox-rulesets-update.sh'
+#         ssh gomami_lax 'bash /usr/local/bin/singbox-rulesets-update.sh'
+# ============================================================
+
+# ↓↓↓ 示例 — 以后照这样写,一行一个域名 ↓↓↓
+example-unlock.com
+
+# ↓↓↓ 你的自定义域名 ↓↓↓
+nodeseek.com
+ijbs.com
+researchsquare.com
+wise.com
