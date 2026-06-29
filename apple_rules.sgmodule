@@ -2,6 +2,8 @@
 #!category = Apple
 
 [Rule]
+DOMAIN,captive.apple.com,DIRECT #login page
+DOMAIN-SUFFIX,connectivitycheck.gstatic.com,DIRECT #login page
 DOMAIN-SUFFIX, apple.com, US
 RULE-SET, https://github.com/Blankwonder/surge-list/raw/master/apple.list, US
 RULE-SET, https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Apple/Apple_All_No_Resolve.list, US, no-resolve
