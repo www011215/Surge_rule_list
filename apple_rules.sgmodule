@@ -4,8 +4,8 @@
 [Rule]
 # Captive portal / connectivity detection -> DIRECT, so the local gateway can intercept the login page.
 # Must precede the apple.com proxy rule below (same module: the earlier line wins).
-DOMAIN, captive.apple.com, DIRECT
-DOMAIN-SUFFIX, connectivitycheck.gstatic.com, DIRECT
+DOMAIN,captive.apple.com,DIRECT #login page
+DOMAIN-SUFFIX,connectivitycheck.gstatic.com,DIRECT #login page
 DOMAIN-SUFFIX, apple.com, US
 RULE-SET, https://github.com/Blankwonder/surge-list/raw/master/apple.list, US
 RULE-SET, https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Apple/Apple_All_No_Resolve.list, US, no-resolve

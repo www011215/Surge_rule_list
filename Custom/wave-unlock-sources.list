@@ -1,0 +1,21 @@
+# ============================================================
+#  自定义解锁 — 订阅上游清单 URL  →  全部转发到 wave 出口
+#  生效节点: gomami HKG + gomami LAX (sing-box 分流网关的 custom 类)
+# ------------------------------------------------------------
+#  用法: 一行写一个【清单 URL】(不是域名)。生成器会自动抓取该 URL、
+#        解析里面的域名(支持 Surge 格式 DOMAIN-SUFFIX,/DOMAIN, 以及裸域名),
+#        与手写的 wave-unlock.list 合并去重 → 整批分流到 wave。
+#        清单跟着上游自动更新,不用一个个域名维护。
+#        # 或 ! 开头的行是注释,会被忽略。
+#
+#  生效方式(改完 push 后,二选一):
+#    1) 等 6 小时自动刷新
+#    2) 立刻刷新(在服务器执行):
+#         ssh gomami_hkg 'bash /usr/local/bin/singbox-rulesets-update.sh'
+#         ssh gomami_lax 'bash /usr/local/bin/singbox-rulesets-update.sh'
+# ============================================================
+
+# ↓↓↓ 你订阅的上游清单 URL(一行一个) ↓↓↓
+
+# Bloomberg(PerimeterX 人机墙 → 走 wave 住宅出口;另需 RN AGH 放行 captcha.px-cloud.net)
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Bloomberg/Bloomberg.list
