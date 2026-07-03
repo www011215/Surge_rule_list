@@ -26,6 +26,8 @@ DOMAIN,cdn.segment.com
 # —— 统一走 wave, 避免"屏蔽遥测"反而触发 Claude 风控; 已同步从 Surge_AI_block.list 移除
 DOMAIN,http-intake.logs.us5.datadoghq.com
 DOMAIN,session-replay-datadoghq.com
+# --- added 2026-07-03 (二进制审计 Claude.app 1.18286.0): 桌面版内嵌 Sentry 崩溃上报 DSN, 报错时才触发; 同遥测策略走 wave ---
+DOMAIN,o1158394.ingest.us.sentry.io
 DOMAIN,anthropic.com.cdn.cloudflare.net
 # claudecontent.com — NOT confirmed Anthropic (currently resolves to a parking IP 162.255.119.52, i.e. a squatter); added 2026-06-03 as a defensive "in case Anthropic ever acquires it" entry at user's explicit request
 DOMAIN-SUFFIX,claudecontent.com
