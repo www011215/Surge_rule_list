@@ -25,22 +25,27 @@ const GiB = 1073741824; // 1024^3
 function getArgs() {
   const raw = typeof $argument !== "undefined" ? $argument : "";
   // Surge 对 {{{ARG}}} 是字面替换（不做 URL 编码），所以按 & 拆分后直接取值、不 decode。
+  // 顺手去掉个别 Surge 版本可能残留的包裹引号（#!arguments 里默认值是 "..." 形式）。
   const p = Object.fromEntries(
     raw.split("&").map((kv) => {
       const [k, ...v] = kv.split("=");
-      return [k.trim(), v.join("=").trim()];
+      return [k.trim(), v.join("=").trim().replace(/^"([\s\S]*)"$/, "$1")];
     })
   );
+  // TOKEN 占位符：#!arguments 不允许空默认值，用占位符表示"未填"
+  const rawToken = p.TOKEN || "";
+  const token = rawToken === "PASTE_YOUR_TOKEN" ? "" : rawToken;
+  const rawExpiry = p.EXPIRY || "";
   return {
-    token: p.TOKEN || "",
+    token,
     title: p.TITLE || "☁️ GoMami VPS",
     icon: p.ICON || "server.rack",
     iconColor: p.ICON_COLOR || "#30B0C7",
     showBar: p.SHOW_BAR !== "0",
     showCpu: p.SHOW_CPU === "1",
     showIp: p.SHOW_IP === "1",
-    // 手动到期表: "HKG.Turin.Mini=2026-12-31,LAX.Pulse.Nano=2026-07-18"
-    expiry: parseExpiry(p.EXPIRY || ""),
+    // 手动到期表: "HKG.Turin.Mini=2026-12-31,LAX.Pulse.Nano=2026-07-18"（"none"/空 = 不显示到期）
+    expiry: parseExpiry(rawExpiry === "none" ? "" : rawExpiry),
     expiryWarn: parseInt(p.EXPIRY_WARN) || 7,
     timeout: parseInt(p.TIMEOUT) || 15,
   };
