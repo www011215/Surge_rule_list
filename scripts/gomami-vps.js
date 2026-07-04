@@ -104,10 +104,19 @@ function fmtG(g) {
   return g.toFixed(2) + "G";
 }
 
-// 黑色实心进度条：已用 = "█"(连成实心条)，剩余 = "░"(浅色轨道)，两端无端盖
+// 粗轨道进度条：已用 = "━"(粗线)，剩余 = "─"(细线)，两端无端盖，等宽比例忠实
 function bar(pct, n = 16) {
   const f = Math.max(0, Math.min(n, Math.round((pct / 100) * n)));
-  return "█".repeat(f) + "░".repeat(n - f);
+  return "━".repeat(f) + "─".repeat(n - f);
+}
+
+// 日期 MM-DD（用 UTC，匹配 API 的月末时间）
+function fmtDate(iso) {
+  if (!iso) return null;
+  const t = Date.parse(iso);
+  if (isNaN(t)) return null;
+  const d = new Date(t);
+  return String(d.getUTCMonth() + 1).padStart(2, "0") + "-" + String(d.getUTCDate()).padStart(2, "0");
 }
 
 // 机器配置：核数 + 内存，如 "2C · 4GB"
@@ -227,10 +236,10 @@ async function main() {
         l3 += "流量数据不可用";
       }
 
-      // 时间信息（重置 / 到期）
+      // 时间信息（流量重置日期 / 到期）
       const info = [];
-      const resetD = daysUntil(base.currentMonthlyPeriod?.end);
-      if (resetD != null) info.push(`↺${resetD}d`);
+      const resetDate = fmtDate(base.currentMonthlyPeriod?.end);
+      if (resetDate) info.push(resetDate);
       const exp = a.expiry[base.name] || a.expiry[disp];
       if (exp) {
         const ed = daysUntil(exp + "T23:59:59Z");
