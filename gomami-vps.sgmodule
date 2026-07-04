@@ -1,5 +1,5 @@
 #!name=GoMami VPS 面板
-#!desc=通过 GoMami (VirtFusion) API 展示每台机器的运行状态、本月流量用量与配额、流量重置倒计时；可选手动配置续费到期倒计时。需在参数 TOKEN 填入 gomami API token。
+#!desc=通过 GoMami (VirtFusion) API 展示每台机器的运行状态、CPU/内存配置、本月流量用量与配额、流量重置日期；可选手动配置续费到期倒计时。需在参数 TOKEN 填入 gomami API token。
 #!category=Network
 #!arguments=TOKEN:"PASTE_YOUR_TOKEN",TITLE:"GoMAMi",ICON:"cloud",ICON_COLOR:"#000000",SHOW_BAR:"1",SHOW_SPEC:"1",SHOW_IP:"1",EXPIRY:"none",EXPIRY_WARN:"7",TIMEOUT:"15",PANEL_NAME:"GoMAMi",UPDATE_INTERVAL:"600"
 #!arguments-desc=1 为开启, 0 为关闭\n\n · [TOKEN]: gomami API token（必填，替换掉占位符 PASTE_YOUR_TOKEN；在 https://cp.gomami.io/account/api 生成）\n · [TITLE]: 面板标题文字\n · [ICON]: 面板图标 (SF Symbols 名称)\n · [ICON_COLOR]: 图标颜色 (正常时)。流量≥75% 或临近到期转橙、≥90%/已到期/暂停转红\n · [SHOW_BAR]: 显示流量进度条\n · [SHOW_SPEC]: 显示 CPU核数/内存 配置\n · [SHOW_IP]: 显示主 IPv4\n · [EXPIRY]: 手动续费到期表（API 不提供到期日）。none = 不显示到期。格式: 机器名=YYYY-MM-DD，多台用英文逗号分隔，机器名与面板显示名一致。例: HKG.Turin.Mini=2026-12-31,LAX.Pulse.Nano=2026-07-18\n · [EXPIRY_WARN]: 到期提醒阈值(天)，剩余≤此值转红\n · [TIMEOUT]: 单请求超时(秒)\n · [PANEL_NAME]: 面板在 Surge 内的名称\n · [UPDATE_INTERVAL]: 面板自动刷新间隔(秒)，-1 为仅点击时刷新。注意 API 有每分钟限流且每台机器会多发一次请求，间隔不宜过短
