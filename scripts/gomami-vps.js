@@ -49,8 +49,8 @@ function getArgs() {
     icon: p.ICON || "cloud",
     iconColor: p.ICON_COLOR || "#000000",
     showBar: p.SHOW_BAR !== "0",
-    showCpu: p.SHOW_CPU !== "0", // 默认开
-    showIp: p.SHOW_IP !== "0",   // 默认开
+    showSpec: p.SHOW_SPEC !== "0", // CPU/RAM 配置，默认开
+    showIp: p.SHOW_IP !== "0",     // 默认开
     expiry: parseExpiry(rawExpiry === "none" ? "" : rawExpiry),
     expiryWarn: parseInt(p.EXPIRY_WARN) || 7,
     timeout: parseInt(p.TIMEOUT) || 15,
@@ -104,10 +104,23 @@ function fmtG(g) {
   return g.toFixed(2) + "G";
 }
 
-// 斜杠进度条：已用 = "╱"(等宽斜线)，剩余 = "·"，两端无端盖，各段等宽总长固定
+// 黑色实心进度条：已用 = "█"(连成实心条)，剩余 = "░"(浅色轨道)，两端无端盖
 function bar(pct, n = 16) {
   const f = Math.max(0, Math.min(n, Math.round((pct / 100) * n)));
-  return "╱".repeat(f) + "·".repeat(n - f);
+  return "█".repeat(f) + "░".repeat(n - f);
+}
+
+// 机器配置：核数 + 内存，如 "2C · 4GB"
+function fmtSpec(base) {
+  const parts = [];
+  const c = /(\d+)/.exec(base.cpu || "");
+  if (c) parts.push(c[1] + "C");
+  const mm = /(\d+)/.exec(base.memory || "");
+  if (mm) {
+    const mb = parseInt(mm[1]);
+    parts.push(mb % 1024 === 0 ? mb / 1024 + "GB" : mb >= 1024 ? (mb / 1024).toFixed(1) + "GB" : mb + "MB");
+  }
+  return parts.join(" · ");
 }
 
 // 黑色小方块状态点（不用彩色圆点）
@@ -196,12 +209,12 @@ async function main() {
       // 1) 机器名单独一行
       lines.push(`${dot} ${disp}`);
 
-      // 2) IP（+ CPU）
+      // 2) IP（+ CPU/RAM 配置）
       const ip = base.network?.primary?.ipv4?.[0]?.address;
-      const cpu = st.cpu ? String(st.cpu).replace(/\s/g, "") : null;
+      const spec = fmtSpec(base);
       const l2 = [];
       if (a.showIp && ip) l2.push(ip);
-      if (a.showCpu && cpu) l2.push(`🖥 ${cpu}`);
+      if (a.showSpec && spec) l2.push(spec);
       if (l2.length) lines.push("  " + l2.join("   "));
 
       // 3) 流量
