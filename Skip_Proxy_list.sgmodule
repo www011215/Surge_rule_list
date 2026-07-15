@@ -2,7 +2,7 @@
 #!desc=跳过部分应用的代理检测_w
 
 [General]
-skip-proxy = %APPEND% www.baidu.com,*.taobao.com, *.boc.cn, *.ccb.com, yunbusiness.ccb.com,wxh.wo.cn,*.abchina.com.cn,login-service.mobile-bank.psbc.com,*.psbc.com,*.cmbchina.cn, *.cmbchina.com, *.citicbank.com, *.haodf.com, *.pumc.edu.cn, *.cams.ac.cn, *.cams.cn, *.pumch.cn, *.pumch.local, *chsi.com.cn
+skip-proxy = %APPEND% www.baidu.com,*.taobao.com, *.boc.cn, *.ccb.com, yunbusiness.ccb.com,wxh.wo.cn,*.abchina.com.cn,login-service.mobile-bank.psbc.com,*.psbc.com,*.cmbchina.cn, *.cmbchina.com, *.citicbank.com, *.haodf.com, *.pumc.edu.cn, *.cams.ac.cn, *.cams.cn, *.pumch.cn, *.pumch.local, *chsi.com.cn, *.douban.com
 
 # yunbusiness.ccb.com 建行生活
 # wxh.wo.cn：沃小号
