@@ -1,17 +1,8 @@
 #Surge_XiaoHongShu.list___________________________
 # NAME: XiaoHongShu (小红书 / rednote)
 # REPO: https://github.com/www011215/Surge_rule_list
-# DESC: 小红书 / rednote(海外版)分流规则。结构与 Surge_AI.list 一致:
-#       "## New Added" 段为自行抓包/检索补充, 置顶优先匹配;
-#       外部订阅以 RULE-SET 订阅格式引入, 其后附各外部源的内联快照
-#       (订阅拉取失败时兜底, 内容有重复无妨)。
-# DESC: 来源:
-#         (a) 自行抓包 (Surge iOS Recent Requests, 2026-07-19): rnote.com 及回源 IP
-#         (b) blackmatrix7/ios_rule_script Surge/XiaoHongShu (订阅 + 快照)
-#         (c) v2fly/domain-list-community geosite:xiaohongshu + askdiandian (摘录)
-#         (d) QuixoticHeart/rule-set socialmedia-cn 小红书条目 (摘录; 该订阅为
-#             国内社交媒体合集, 混含 NGA/微博/知乎/豆瓣/酷安, 故不直接订阅)
-#         (e) ControlD services 请求里的小红书域名资产清单, 2026-07-19 逐个 DNS 验证
+# DESC: 小红书/rednote 分流。自补规则置顶, 外部订阅走 RULE-SET,
+#       文末附外部源快照兜底 (订阅拉取失败也不缺覆盖)。
 # RULE-SET: 1
 # DOMAIN-SUFFIX: 26
 # DOMAIN-KEYWORD: 1
@@ -21,19 +12,13 @@
 # TOTAL: 34
 
 ## New Added
-# ========== 自行抓包 (2026-07-19, Surge iOS 面板截图) ==========
-# rnote.com — rednote(小红书海外版)短域名。抓包可见 edith.rnote.com /
-#   gslb.rnote.com / www.rnote.com, 子域命名与小红书主站 API 网关
-#   edith.xiaohongshu.com / gslb 完全一致; 2025-12 起非 +86 新注册用户被
-#   划入 rednote 产品线 (web 入口 rednote.com), rnote.com 为其配套域名。
+# --- 自行抓包 2026-07-19: rnote.com 为 rednote(海外版)域名, 抓到 edith/gslb/www 子域 ---
 DOMAIN-SUFFIX,rnote.com
-# 抓包时段 rnote.com 实际连接 IP (43.175.x / 43.169.x 腾讯云国际,
-# 8.214.x 阿里云国际); CDN 回源会轮换, 以域名规则为主, IP 仅作兜底。
+# 抓包时段回源 IP, 仅兜底 (CDN 会轮换)
 IP-CIDR,43.175.134.104/32,no-resolve
 IP-CIDR,8.214.162.195/32,no-resolve
 IP-CIDR,43.169.22.218/32,no-resolve
-# ========== 检索补充: 小红书注册域名资产 (来源 ControlD services 请求; 2026-07-19 DNS 验证) ==========
-# 当前有解析:
+# --- 小红书注册域名 (来源 ControlD 清单, 2026-07-19 DNS 验证) ---
 DOMAIN-SUFFIX,xiaohongshu.cn
 DOMAIN-SUFFIX,xiaohongshu.net
 DOMAIN-SUFFIX,xiaohongshu.net.cn
@@ -41,46 +26,34 @@ DOMAIN-SUFFIX,xhscdn.cn
 DOMAIN-SUFFIX,xhslink.cn
 DOMAIN-SUFFIX,xhsurl.cn
 DOMAIN-SUFFIX,xhsurl.com
-# 当前无解析记录, 防御性收录 (小红书注册资产, 随时可能启用):
+# 以下 6 条当前无解析, 防御性收录
 DOMAIN-SUFFIX,xhsdns.com
 DOMAIN-SUFFIX,xhsdns.net
 DOMAIN-SUFFIX,xhsos.com
 DOMAIN-SUFFIX,xhssys.cn
 DOMAIN-SUFFIX,xhssys.com
 DOMAIN-SUFFIX,xhssys.net
-# 防御性关键词, 兜底未来新域名; 如误伤第三方含 xiaohongshu 字样的域名可注释
+# 兜底: 关键词 + iOS UA (discover/x.x.x) + Android 包名 (iOS 忽略 PROCESS-NAME)
 DOMAIN-KEYWORD,xiaohongshu
-# 客户端特征: iOS 版小红书 UA 为 "discover/x.x.x (iPhone; iOS ...)";
-# PROCESS-NAME 为 Android 包名 (照 Surge_Bilibili.list 惯例收录, iOS 忽略)
-USER-AGENT,discover*
+USER-AGENT,discover/*
 USER-AGENT,*XiaoHongShu*
 PROCESS-NAME,com.xingin.xhs
-# ========== end New Added ==========
 
-# --- 外部订阅 (RULE-SET 订阅格式) ---
+# --- 外部订阅 ---
 RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/XiaoHongShu/XiaoHongShu.list
-# QuixoticHeart/rule-set 的 socialmedia-cn 为国内社交媒体合集 (含 NGA/微博/
-# 知乎/豆瓣/酷安), 非小红书专用, 直接订阅会把微博知乎也带进本策略, 故仅
-# 摘录其小红书条目于下方快照段; 如确要整体订阅可解除注释:
+# QuixoticHeart socialmedia-cn 是多 App 合集(含微博/知乎等), 不直接订阅, 小红书条目已摘录到下方快照:
 # RULE-SET,https://github.com/QuixoticHeart/rule-set/raw/refs/heads/ruleset/surge/socialmedia-cn.list
 
-#XiaoHongShu.list___________________________
-#https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/XiaoHongShu/XiaoHongShu.list
-# NAME: XiaoHongShu
-# AUTHOR: blackmatrix7
-# REPO: https://github.com/blackmatrix7/ios_rule_script
-# UPDATED: 2025-06-06 09:18:50 (快照抓取于 2026-07-19)
-# fengkongcloud.com 为数美(风控 SDK)共享域名, 众多国内 App 共用,
-# 上游如此收录, 快照保持原样; 介意误伤可注释。
+# --- 快照: blackmatrix7 XiaoHongShu.list (上游 2025-06-06 版, 抓于 2026-07-19) ---
+# https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/XiaoHongShu/XiaoHongShu.list
+# fengkongcloud.com 为数美风控, 多 App 共用, 介意可注释
 DOMAIN-SUFFIX,fengkongcloud.com
 DOMAIN-SUFFIX,xhscdn.com
 DOMAIN-SUFFIX,xhscdn.net
 DOMAIN-SUFFIX,xiaohongshu.com
 
-#geosite_xiaohongshu___________________________
-#https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/xiaohongshu
-# (geosite:xiaohongshu 摘录 2026-07-19, 已去除与上方 blackmatrix7 快照重复项;
-#  QuixoticHeart socialmedia-cn 的小红书条目与此一致, 一并覆盖)
+# --- 快照: geosite:xiaohongshu 摘录, 已去重 (QuixoticHeart 小红书条目与此相同) ---
+# https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/xiaohongshu
 DOMAIN-SUFFIX,redelight.cn
 DOMAIN-SUFFIX,rednote.com
 DOMAIN-SUFFIX,rednote.com.my
@@ -88,8 +61,6 @@ DOMAIN-SUFFIX,rednotecdn.com
 DOMAIN-SUFFIX,xhslink.com
 DOMAIN-SUFFIX,xhsrcdn.com
 
-#geosite_askdiandian___________________________
-#https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/askdiandian
-# 点点 AI (小红书旗下), geosite:xiaohongshu 的 include 项
+# --- 快照: geosite:askdiandian (点点 AI, 小红书旗下) ---
 DOMAIN-SUFFIX,askdiandian.com
 DOMAIN-SUFFIX,diandianlife.top
