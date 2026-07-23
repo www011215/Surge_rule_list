@@ -1,25 +1,140 @@
-#!name = 📺 BiliBili 分流提速(PCDN 拦截 + CDN 分流)
-#!desc = 三层分流:①PCDN(mcdn.bilivideo.cn / szbdyd.com)默认 REJECT,播放器快速回退正规 upos CDN;②大陆视频/静态 CDN(bilivideo / hdslb / biliimg / acgvideo)默认 DIRECT,不再绕道代理;③akamaized / bstar 海外镜像默认 HK,港澳台限定解锁不受影响。三处策略均可通过模块参数自定义。模块规则优先于主配置规则,无需改动主配置。
+#!name = 📺 BiliBili 分流提速(PCDN 拦截 + 完整分流)
+#!desc = 完整自包含的 BiliBili 分流,覆盖 Surge_Bilibili.list 全部内容并按四档分层:①PCDN(mcdn / szbdyd / 星域00cdn)默认 REJECT,播放器快速回退正规 upos CDN;②大陆视频/静态 CDN(bilivideo / hdslb / biliimg / ourdvsss 伪装域 / 金山云调度等)默认 DIRECT;③akamaized / bstar / 国际版默认 HK,港澳台限定解锁不受影响;④API/网页/游戏/短链及杂项 IP 默认 HK。四处策略均可通过模块参数自定义。模块规则优先于主配置,装好后主配置的 Bilibili RULE-SET 行会被完全遮蔽,可留作后备。注:阿里/腾讯 HTTPDNS 服务 IP(203.107.1.0/24、119.29.29.29)刻意未收录,避免与 BlockHTTPDNS 模块的 REJECT 冲突。
 #!author = www011215
 #!category = BiliBili
-#!arguments = PCDN.Policy:"REJECT",CDN.Policy:"DIRECT",Overseas.Policy:"HK"
-#!arguments-desc = PCDN.Policy: [PCDN] mcdn.bilivideo.cn / szbdyd.com 走的策略\n默认 REJECT(拦截后播放器自动回退正规 CDN);如遇直播异常可改为 DIRECT。\n\nCDN.Policy: [大陆CDN] bilivideo / hdslb / biliimg / acgvideo 走的策略\n默认 DIRECT(本地 DNS 就近调度国内边缘节点);可改为任意策略组名。\n\nOverseas.Policy: [海外镜像] upos-*-mirrorakam.akamaized.net / bstarstatic 走的策略\n默认 HK(港澳台限定番剧视频源);可改为任意策略组名。
+#!arguments = PCDN.Policy:"REJECT",CDN.Policy:"DIRECT",Overseas.Policy:"HK",Main.Policy:"HK"
+#!arguments-desc = PCDN.Policy: [PCDN] mcdn.bilivideo.cn / szbdyd.com / 00cdn 走的策略\n默认 REJECT(拦截后播放器自动回退正规 CDN);如遇直播/播放异常可改为 DIRECT。\n\nCDN.Policy: [大陆CDN] bilivideo / hdslb / biliimg / acgvideo / ourdvsss / ksyungslb 等走的策略\n默认 DIRECT(本地 DNS 就近调度国内边缘节点);可改为任意策略组名。\n\nOverseas.Policy: [海外镜像] upos-*-mirrorakam.akamaized.net / bstarstatic / biliintl / bilibili.tv 走的策略\n默认 HK(港澳台限定番剧视频源及国际版);可改为任意策略组名。\n\nMain.Policy: [主站] bilibili.com / biliapi / 游戏 / 漫画 / 短链 / UA / 杂项 IP 走的策略\n默认 HK(保持解锁身份);可改为任意策略组名。
 
 [Rule]
-# PCDN:默认 REJECT 快速失败,播放器自动回退正规 upos CDN
+# ============ ① PCDN:默认 REJECT 快速失败,播放器自动回退正规 upos CDN ============
 # (HTTPDNS 直出 IP 的旁路已由 BlockHTTPDNS 模块覆盖)
 DOMAIN-SUFFIX,mcdn.bilivideo.cn,{{{PCDN.Policy}}},extended-matching
 DOMAIN-SUFFIX,szbdyd.com,{{{PCDN.Policy}}},extended-matching
-# 海外镜像(港澳台限定番剧视频源):默认 HK
+# 星域(迅雷)PCDN
+DOMAIN-SUFFIX,00cdn.com,{{{PCDN.Policy}}},extended-matching
+
+# ============ ② 海外镜像/国际版:默认 HK(港澳台限定番剧视频源) ============
 DOMAIN-WILDCARD,upos-*-mirrorakam.akamaized.net,{{{Overseas.Policy}}},extended-matching
 DOMAIN,p-bstarstatic.akamaized.net,{{{Overseas.Policy}}},extended-matching
 DOMAIN-SUFFIX,bstarstatic.com,{{{Overseas.Policy}}},extended-matching
-# 大陆视频/静态 CDN:默认 DIRECT,本地 DNS 就近调度国内边缘节点
+DOMAIN-SUFFIX,biliintl.co,{{{Overseas.Policy}}},extended-matching
+DOMAIN-SUFFIX,biliintl.com,{{{Overseas.Policy}}},extended-matching
+DOMAIN-SUFFIX,bilibili.tv,{{{Overseas.Policy}}},extended-matching
+
+# ============ ③ 大陆视频/静态 CDN:默认 DIRECT,本地 DNS 就近调度 ============
+# 视频 CDN(keyword 兜底 upos-* / cn-* 等全部 bilivideo 变体)
 DOMAIN-SUFFIX,bilivideo.com,{{{CDN.Policy}}},extended-matching
 DOMAIN-SUFFIX,bilivideo.cn,{{{CDN.Policy}}},extended-matching
 DOMAIN-SUFFIX,bilivideo.net,{{{CDN.Policy}}},extended-matching
+DOMAIN-SUFFIX,uposdash-302-bilivideo.yfcdn.net,{{{CDN.Policy}}},extended-matching
+DOMAIN-KEYWORD,bilivideo,{{{CDN.Policy}}},extended-matching
 DOMAIN-SUFFIX,acgvideo.com,{{{CDN.Policy}}},extended-matching
+# 静态资源/图片
 DOMAIN-SUFFIX,hdslb.com,{{{CDN.Policy}}},extended-matching
+DOMAIN-SUFFIX,hdslb.net,{{{CDN.Policy}}},extended-matching
+DOMAIN-SUFFIX,hdslb.org,{{{CDN.Policy}}},extended-matching
+DOMAIN-SUFFIX,hdslb.com.w.kunlunhuf.com,{{{CDN.Policy}}},extended-matching
+DOMAIN-SUFFIX,hdslb.com.w.kunlunpi.com,{{{CDN.Policy}}},extended-matching
 DOMAIN-SUFFIX,biliimg.com,{{{CDN.Policy}}},extended-matching
-# API(bilibili.com / biliapi.net)刻意不写在这里,
-# 继续落回主配置的 Bilibili RULE-SET → HK,保持解锁身份
+DOMAIN-SUFFIX,bilicdn1.com,{{{CDN.Policy}}},extended-matching
+DOMAIN-SUFFIX,bilicdn2.com,{{{CDN.Policy}}},extended-matching
+DOMAIN-SUFFIX,bilicdn3.com,{{{CDN.Policy}}},extended-matching
+DOMAIN-SUFFIX,bilicdn4.com,{{{CDN.Policy}}},extended-matching
+DOMAIN-SUFFIX,bilicdn5.com,{{{CDN.Policy}}},extended-matching
+# HTTPDNS 伪装域(主机名编码 IP,后缀一条全覆盖,替代原列表 50+ 条 DOMAIN)
+DOMAIN-SUFFIX,ourdvsss.com,{{{CDN.Policy}}},extended-matching
+# 金山云 GSLB 调度(替代原列表 8 条 host 级条目)
+DOMAIN-SUFFIX,ksyungslb.com,{{{CDN.Policy}}},extended-matching
+# 其他 CDN(猫耳/腾讯智能调度/旧 CDN)
+DOMAIN-SUFFIX,maoercdn.com,{{{CDN.Policy}}},extended-matching
+DOMAIN-SUFFIX,mincdn.com,{{{CDN.Policy}}},extended-matching
+DOMAIN-SUFFIX,smtcdns.net,{{{CDN.Policy}}},extended-matching
+
+# ============ ④ 主站 API/网页/游戏/短链/杂项:默认 HK,保持解锁身份 ============
+# 主站与 API
+DOMAIN-SUFFIX,bilibili.com,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,bilibili.cc,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,bilibili.cn,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,bilibili.co,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,bilibili.net,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,biliapi.com,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,biliapi.net,{{{Main.Policy}}},extended-matching
+# 短链
+DOMAIN-SUFFIX,acg.tv,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,b23.tv,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,bili22.cn,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,bili23.cn,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,bili33.cn,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,bili2233.cn,{{{Main.Policy}}},extended-matching
+# 游戏/支付/漫画/周边业务
+DOMAIN-SUFFIX,biligame.cn,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,biligame.co,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,biligame.com,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,biligame.net,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,bilibiligame.cn,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,bilibiligame.co,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,bilibiligame.net,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,bilibilipay.cn,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,bilibilipay.com,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,bilicomics.com,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,biligo.com,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,biliplus.com,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,bigfun.cn,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,bigfunapp.cn,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,dyhgames.com,{{{Main.Policy}}},extended-matching
+# 关联站点(猫耳/动画魂/Anitama 等)
+DOMAIN-SUFFIX,animetamashi.cn,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,animetamashi.com,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,anitama.cn,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,anitama.net,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,baka.im,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,corari.com,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,dreamcast.hk,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,im9.com,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,yo9.com,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,mcbbs.net,{{{Main.Policy}}},extended-matching
+DOMAIN-SUFFIX,sharejoytech.com,{{{Main.Policy}}},extended-matching
+# UA 兜底(仅明文 HTTP 可见)
+USER-AGENT,*bili*,{{{Main.Policy}}}
+USER-AGENT,Bilibili*,{{{Main.Policy}}}
+USER-AGENT,bili*,{{{Main.Policy}}}
+USER-AGENT,bili-inter*,{{{Main.Policy}}}
+# 进程名兜底(原列表带的 Android 包名,macOS 上不会命中,保留以保内容完整)
+PROCESS-NAME,com.bilibili.app.blue,{{{Main.Policy}}}
+PROCESS-NAME,com.bilibili.app.in,{{{Main.Policy}}}
+PROCESS-NAME,com.bilibili.comic,{{{Main.Policy}}}
+PROCESS-NAME,com.bilibili.comic.intl,{{{Main.Policy}}}
+PROCESS-NAME,tv.danmaku.bili,{{{Main.Policy}}}
+PROCESS-NAME,tv.danmaku.bilibilihd,{{{Main.Policy}}}
+# 杂项直连 IP(原列表捕获的 B 站相关 IP;HTTPDNS 服务 IP 已剔除,由 BlockHTTPDNS 模块处理)
+IP-CIDR,106.75.74.76/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,111.206.25.147/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,119.3.238.64/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,120.92.108.182/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,120.92.113.99/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,120.92.153.217/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,134.175.207.130/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,116.153.84.187/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,203.119.204.80/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,101.73.66.122/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,49.7.89.76/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,203.119.206.8/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,203.119.206.9/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,116.162.124.79/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,116.162.124.140/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,119.188.10.59/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,61.240.206.16/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,27.37.206.195/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,112.83.140.16/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,221.15.71.78/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,123.234.3.225/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,124.220.169.18/32,{{{Main.Policy}}},no-resolve
+# 海外边缘 IP(bstar/Zenlayer 段,原列表后期追加)
+IP-CIDR,45.43.32.234/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,128.1.62.200/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,128.1.62.201/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,150.116.92.250/32,{{{Main.Policy}}},no-resolve
+IP-CIDR,164.52.76.18/32,{{{Main.Policy}}},no-resolve
+# B 站自有 ASN
+IP-ASN,140633,{{{Main.Policy}}},no-resolve
+IP-ASN,140943,{{{Main.Policy}}},no-resolve
