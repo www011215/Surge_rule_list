@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 # ipcheck.sh — focused IP-quality + streaming-region checker
+# v1.5 (2026-07-23): + Google Search geo-redirect probe (302→google.com.hk = the
+#   definitive "Google places this IP in mainland China" signal; catches 送中 cases
+#   the YT Premium check alone misses) + www.google.cn marker corroborator on the
+#   Premium page. Validated against a known-送中 v6 path vs its clean v4 twin.
 #
 # Designed for VPS used as a proxy egress (snell / shadowsocks / etc).
 # Tests v4 AND v6 paths separately, then runs a ROLE-AWARE DNS audit:
@@ -71,7 +75,7 @@ fetch() { # $1=family(4/6) $2=url [extra args...]
 have_v6() { curl -6 -s -m 4 -o /dev/null -w "%{http_code}" https://[2606:4700:4700::1111]/ 2>/dev/null | grep -qE '^[2-4][0-9][0-9]$'; }
 
 # ============================================================================
-hdr "ipcheck v1.4  ·  $(date '+%F %T %Z')  ·  $(hostname)"
+hdr "ipcheck v1.5  ·  $(date '+%F %T %Z')  ·  $(hostname)"
 
 V6_OK=0; have_v6 && V6_OK=1
 [ "$MODE" = "A" ] || echo "(mode: v${MODE} only)"
@@ -162,6 +166,41 @@ run_ip() {
 # ============================================================================
 hdr "Streaming region (YouTube • Netflix • Spotify • OpenAI)"
 
+# --- Google Search geo redirect -------------------------------------
+# THE definitive "Google thinks this IP is mainland China" probe. Google answers
+# a plain /search with HTTP 302 -> www.google.com.hk/url?...&hl=zh-CN&pref=hkredirect
+# for CN-geolocated IPs (this server-side redirect is exactly the visible "Google
+# 显示中国大陆" symptom). Clean IPs get HTTP 200. Other 302s are classified, not
+# conflated: consent.google.com = EU consent wall; /sorry/ = rate-limit captcha.
+test_google_geo() {
+  local f=$1 extra=""
+  if [ $f = 6 ]; then
+    local ip=$(resolve_aaaa www.google.com)
+    [ -z "$ip" ] && { bad "v6 Google geo" "no AAAA upstream"; return; }
+    extra="--resolve www.google.com:443:[$ip]"
+  fi
+  local out code redir
+  if [ "$f" = "4" ]; then
+    out=$(curl -4 -s -m 10 -A "Mozilla/5.0" $extra -o /dev/null -w '%{http_code} %{redirect_url}' "https://www.google.com/search?q=test&hl=en")
+  else
+    out=$(curl -6 -s -m 10 -A "Mozilla/5.0" $extra -o /dev/null -w '%{http_code} %{redirect_url}' "https://www.google.com/search?q=test&hl=en")
+  fi
+  code=${out%% *}; redir=${out#* }
+  if [ "$code" = "200" ]; then
+    ok   "v${f} Google geo" "search 200 normal (not CN-redirected)"
+  elif echo "$redir" | grep -qE 'google\.(com\.hk|cn)|hkredirect'; then
+    bad  "v${f} Google geo" "302→google.com.hk ← Google 判定中国大陆 (送中)"
+  elif echo "$redir" | grep -q 'consent\.google'; then
+    warn "v${f} Google geo" "EU consent redirect (not a CN signal)"
+  elif echo "$redir" | grep -q '/sorry/'; then
+    warn "v${f} Google geo" "captcha/rate-limited (inconclusive)"
+  else
+    warn "v${f} Google geo" "code=$code ${redir:+-> $redir}"
+  fi
+}
+[ "$MODE" != "6" ] && test_google_geo 4
+[ "$MODE" != "4" ] && [ $V6_OK -eq 1 ] && test_google_geo 6
+
 # --- YouTube --------------------------------------------------------
 test_youtube() {
   local f=$1 body extra=""
@@ -195,10 +234,16 @@ test_yt_premium() {
     extra="--resolve www.youtube.com:443:[$ip]"
   fi
   local page=$(fetch $f https://www.youtube.com/premium $extra)
+  local gcn=""
+  echo "$page" | grep -q "www\.google\.cn" && gcn="  [page references www.google.cn ← CN corroborator]"
   if echo "$page" | grep -qiE "not available in your (country|location|region)|isn.t available in your"; then
-    bad  "v${f} YT Premium" "NOT available ← Premium geo rejects this IP (送中)"
+    bad  "v${f} YT Premium" "NOT available ← Premium geo rejects this IP (送中)$gcn"
   elif echo "$page" | grep -qiE "INNERTUBE_CONTEXT_GL"; then
-    ok   "v${f} YT Premium" "available (no region rejection)"
+    if [ -n "$gcn" ]; then
+      warn "v${f} YT Premium" "available BUT$gcn"
+    else
+      ok   "v${f} YT Premium" "available (no region rejection)"
+    fi
   else
     warn "v${f} YT Premium" "(could not determine)"
   fi
