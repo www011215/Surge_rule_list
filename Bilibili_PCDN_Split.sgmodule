@@ -1,19 +1,25 @@
-#!name=📺 BiliBili 分流提速(PCDN 拦截 + 大陆 CDN 直连)
-#!desc=三层分流:①PCDN(mcdn.bilivideo.cn / szbdyd.com)REJECT,播放器快速回退正规 upos CDN;②大陆视频/静态 CDN(bilivideo / hdslb / biliimg / acgvideo)直连,不再绕道代理;③API 与 akamaized 海外镜像不在本模块内,继续按主配置 Surge_Bilibili.list 走 HK,港澳台限定解锁不受影响。模块规则优先于主配置规则,无需改动主配置。
-#!author=www011215
-#!category=BiliBili
+#!name = 📺 BiliBili 分流提速(PCDN 拦截 + CDN 分流)
+#!desc = 三层分流:①PCDN(mcdn.bilivideo.cn / szbdyd.com)默认 REJECT,播放器快速回退正规 upos CDN;②大陆视频/静态 CDN(bilivideo / hdslb / biliimg / acgvideo)默认 DIRECT,不再绕道代理;③akamaized / bstar 海外镜像默认 HK,港澳台限定解锁不受影响。三处策略均可通过模块参数自定义。模块规则优先于主配置规则,无需改动主配置。
+#!author = www011215
+#!category = BiliBili
+#!arguments = PCDN.Policy:"REJECT",CDN.Policy:"DIRECT",Overseas.Policy:"HK"
+#!arguments-desc = PCDN.Policy: [PCDN] mcdn.bilivideo.cn / szbdyd.com 走的策略\n默认 REJECT(拦截后播放器自动回退正规 CDN);如遇直播异常可改为 DIRECT。\n\nCDN.Policy: [大陆CDN] bilivideo / hdslb / biliimg / acgvideo 走的策略\n默认 DIRECT(本地 DNS 就近调度国内边缘节点);可改为任意策略组名。\n\nOverseas.Policy: [海外镜像] upos-*-mirrorakam.akamaized.net / bstarstatic 走的策略\n默认 HK(港澳台限定番剧视频源);可改为任意策略组名。
 
 [Rule]
-# PCDN:REJECT 快速失败,播放器自动回退正规 upos CDN
+# PCDN:默认 REJECT 快速失败,播放器自动回退正规 upos CDN
 # (HTTPDNS 直出 IP 的旁路已由 BlockHTTPDNS 模块覆盖)
-DOMAIN-SUFFIX,mcdn.bilivideo.cn,REJECT,extended-matching
-DOMAIN-SUFFIX,szbdyd.com,REJECT,extended-matching
-# 大陆视频/静态 CDN:直连,本地 DNS 就近调度国内边缘节点
-DOMAIN-SUFFIX,bilivideo.com,DIRECT,extended-matching
-DOMAIN-SUFFIX,bilivideo.cn,DIRECT,extended-matching
-DOMAIN-SUFFIX,bilivideo.net,DIRECT,extended-matching
-DOMAIN-SUFFIX,acgvideo.com,DIRECT,extended-matching
-DOMAIN-SUFFIX,hdslb.com,DIRECT,extended-matching
-DOMAIN-SUFFIX,biliimg.com,DIRECT,extended-matching
-# 海外镜像(upos-*-mirrorakam.akamaized.net / bstar)刻意不写在这里,
-# 让它们落回主配置的 Bilibili RULE-SET → HK,港澳台限定番剧照常走代理
+DOMAIN-SUFFIX,mcdn.bilivideo.cn,{{{PCDN.Policy}}},extended-matching
+DOMAIN-SUFFIX,szbdyd.com,{{{PCDN.Policy}}},extended-matching
+# 海外镜像(港澳台限定番剧视频源):默认 HK
+DOMAIN-WILDCARD,upos-*-mirrorakam.akamaized.net,{{{Overseas.Policy}}},extended-matching
+DOMAIN,p-bstarstatic.akamaized.net,{{{Overseas.Policy}}},extended-matching
+DOMAIN-SUFFIX,bstarstatic.com,{{{Overseas.Policy}}},extended-matching
+# 大陆视频/静态 CDN:默认 DIRECT,本地 DNS 就近调度国内边缘节点
+DOMAIN-SUFFIX,bilivideo.com,{{{CDN.Policy}}},extended-matching
+DOMAIN-SUFFIX,bilivideo.cn,{{{CDN.Policy}}},extended-matching
+DOMAIN-SUFFIX,bilivideo.net,{{{CDN.Policy}}},extended-matching
+DOMAIN-SUFFIX,acgvideo.com,{{{CDN.Policy}}},extended-matching
+DOMAIN-SUFFIX,hdslb.com,{{{CDN.Policy}}},extended-matching
+DOMAIN-SUFFIX,biliimg.com,{{{CDN.Policy}}},extended-matching
+# API(bilibili.com / biliapi.net)刻意不写在这里,
+# 继续落回主配置的 Bilibili RULE-SET → HK,保持解锁身份
