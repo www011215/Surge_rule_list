@@ -40,7 +40,7 @@ USER-AGENT,*XiaoHongShu*
 PROCESS-NAME,com.xingin.xhs
 
 # --- 外部订阅 ---
-RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/XiaoHongShu/XiaoHongShu.list
+RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/XiaoHongShu/XiaoHongShu.list
 # QuixoticHeart socialmedia-cn 是多 App 合集(含微博/知乎等), 不直接订阅, 小红书条目已摘录到下方快照:
 # RULE-SET,https://github.com/QuixoticHeart/rule-set/raw/refs/heads/ruleset/surge/socialmedia-cn.list
 
