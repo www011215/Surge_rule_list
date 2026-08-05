@@ -1574,7 +1574,6 @@ DOMAIN-SUFFIX,vdapprecv.app.cntvwb.cn
 
 # >>>>>>>>>>>>>>> ✅ Z ✅ <<<<<<<<<<<<<<
 # > 知乎
-USER-AGENT,AVOS*
 DOMAIN, appcloud.zhihu.com
 DOMAIN, appcloud2.in.zhihu.com
 DOMAIN, mqtt.zhihu.com

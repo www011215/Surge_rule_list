@@ -1,24 +1,24 @@
 #!name=BlockHTTPDNS-Plus
-#!desc=HTTPDNS 拦截增强：静态兜底（IP-CIDR/域名 REJECT）+ skk.moe 通用 REJECT 集（范围不止 HTTPDNS，含广告等，与 AdBlock 模块可能重叠）。全 REJECT 规则，无需开启 MITM。
+#!desc=HTTPDNS 拦截增强：静态兜底（IP-CIDR/域名 REJECT）+ skk.moe 通用 REJECT 集（范围不止 HTTPDNS，含广告等，与 AdBlock 模块可能重叠）。全 REJECT 规则已启用 pre-matching（域名条目 DNS 阶段拒答、IP 条目握手阶段拒绝），无需开启 MITM。
 #!category=Network
 #!author=wwb
 
 [Rule]
 # 1. skk.moe 通用 REJECT 集（自动更新；非仅 HTTPDNS，含广告/隐私等，与 AdBlock 模块可能重叠）
-RULE-SET,https://ruleset.skk.moe/List/non_ip/reject.conf,REJECT,extended-matching,no-resolve
-RULE-SET,https://ruleset.skk.moe/List/ip/reject.conf,REJECT,no-resolve
+RULE-SET,https://ruleset.skk.moe/List/non_ip/reject.conf,REJECT,extended-matching,no-resolve,pre-matching
+RULE-SET,https://ruleset.skk.moe/List/ip/reject.conf,REJECT,no-resolve,pre-matching
 
 # 2. DNSPod/腾讯 HTTPDNS 整段兜底（含漏网的 119.29.29.90）
-IP-CIDR,119.29.29.0/24,REJECT,no-resolve
+IP-CIDR,119.29.29.0/24,REJECT,no-resolve,pre-matching
 
 # 3. 阿里云 HTTPDNS 兜底
-IP-CIDR,203.107.1.0/24,REJECT,no-resolve
+IP-CIDR,203.107.1.0/24,REJECT,no-resolve,pre-matching
 
 # 4. 常见 HTTPDNS 域名兜底（防 IP 漂移）
-DOMAIN-SUFFIX,httpdns.pro,REJECT
-DOMAIN,dns.weixin.qq.com,REJECT
-DOMAIN,dns.jd.com,REJECT
-DOMAIN,amdc.alipay.com,REJECT
+DOMAIN-SUFFIX,httpdns.pro,REJECT,pre-matching
+DOMAIN,dns.weixin.qq.com,REJECT,pre-matching
+DOMAIN,dns.jd.com,REJECT,pre-matching
+DOMAIN,amdc.alipay.com,REJECT,pre-matching
 
 # 说明：本模块全部为 REJECT 规则，119.29.29.90/.98/.99 已被上方 119.29.29.0/24 整段覆盖，
 # 无需 [MITM]（REJECT 在连接层生效，加 MITM 只会要求装证书并扩大解密范围，无实际作用）。
