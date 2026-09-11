@@ -80,3 +80,7 @@
 ! @@||mask.icloud.com^$important
 ! @@||mask-h2.icloud.com^$important
 ! @@||mask-api.icloud.com^$important
+
+! 2026-09-12: Creative Cloud Home API (adobe.com/home 'Something went wrong' when blocked by 217heidai) + Acrobat AI provisioning
+@@||cchome.adobe.io^$important
+@@||dc-genai-access-provisioning-api.adobe.io^$important
