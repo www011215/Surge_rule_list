@@ -5,7 +5,7 @@
 !               217heidai, StevenBlack, AdGuard DNS filter, etc.) that
 !               over-block legitimate first-party services.
 ! Homepage:     https://github.com/www011215/Surge_rule_list
-! Last update:  2026-05-22
+! Last update:  2026-09-12
 !
 ! ─── HOW TO USE ───
 ! In AdGuard Home → Filters → DNS blocklists, click "Add blocklist" → "Add a custom list"
@@ -61,6 +61,12 @@
 @@||adelogs.adobe.com^$important
 @@||ereg.adobe.com^$important
 
+! --- Creative Cloud Desktop home feed (2026-09-12) ---
+! adobecorp.data.adobedc.net is the Adobe Experience Platform data endpoint the
+! CC desktop app loads its Home/Suggested cards from. 217heidai blocks it, so CC
+! shows "There was a problem loading some of the content" on every launch.
+@@||adobecorp.data.adobedc.net^$important
+
 ! --- Adobe Fonts (Typekit) — keep these unblocked or webfonts break ---
 @@||use.typekit.net^$important
 @@||p.typekit.net^$important
@@ -84,3 +90,12 @@
 ! 2026-09-12: Creative Cloud Home API (adobe.com/home 'Something went wrong' when blocked by 217heidai) + Acrobat AI provisioning
 @@||cchome.adobe.io^$important
 @@||dc-genai-access-provisioning-api.adobe.io^$important
+
+
+! ╔══════════════════════════════════════════════════════════════╗
+! ║                        MICROSOFT                              ║
+! ╚══════════════════════════════════════════════════════════════╝
+! 2026-09-12: g.live.com is the config/update endpoint the standalone OneDrive
+! updater (macOS) hits first. Upstream lists tag it as telemetry; blocking it
+! silently kills OneDrive self-update (client stays on an old build forever).
+@@||g.live.com^$important
