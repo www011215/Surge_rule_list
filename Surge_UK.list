@@ -1,0 +1,73 @@
+# NAME: UK
+# 所有英国服务 → UK 出口 (yunyoo London)。Surge 用法:
+#   RULE-SET,https://raw.githubusercontent.com/www011215/Surge_rule_list/refs/heads/main/Surge_UK.list,UK,extended-matching,no-resolve // UK
+# 结构: ① .uk 全 TLD 兜底 (co.uk/org.uk/ac.uk/gov.uk/nhs.uk… 全含)
+#       ② 用 .com/.tv 等非 .uk 域名的英国流媒体/服务, 按品牌分块
+# 来源: Sukka ruleset.skk.moe stream_eu (2026-08) + blackmatrix7 UKMedia/BBC/ITV/BritboxUK/SkyGO (2025-06, 去重合并,
+#       剔除 launchdarkly/conviva/omtrdc/comcast 等通用第三方 + skygo.co.nz) + 手工补 My5/STV/S4C/Channel4 别名 (2026-09-13, yunyoo dig 验证)
+# ⚠️ 不含全球性服务 (DAZN/Disney+/Netflix/Prime Video/Discovery+) —— 这些按账号地区另行处理
+
+# ===== ① UK TLD 兜底 =====
+DOMAIN-SUFFIX,uk
+
+# ===== ② BBC / iPlayer / Sounds =====
+DOMAIN-SUFFIX,bbc
+DOMAIN-SUFFIX,bbc.co
+DOMAIN-SUFFIX,bbc.com
+DOMAIN-SUFFIX,bbc.in
+DOMAIN-SUFFIX,bbci.co
+DOMAIN-SUFFIX,bbcchinese.com
+DOMAIN-SUFFIX,bbcpersian.com
+DOMAIN-SUFFIX,bbcverticals.com
+DOMAIN-SUFFIX,bbc-reporting-api.app
+DOMAIN-SUFFIX,bb-static.com
+DOMAIN-SUFFIX,bbcfmt.hs.llnwd.net
+DOMAIN-SUFFIX,bbcfmt.s.llnwi.net
+DOMAIN,bbc.mp-pxcdn.com
+DOMAIN-KEYWORD,bbcfmt
+# BBC/ITV 流媒体源站: *-uk-live.akamaized.net / *-ww-live.akamaized.net
+DOMAIN-KEYWORD,uk-live
+DOMAIN,vod-dash-ww-live.akamaized.net
+DOMAIN,vod-thumb-ww-live.akamaized.net
+DOMAIN,vs-cmaf-pushb-ww-live.akamaized.net
+USER-AGENT,BBCiPlayer*
+
+# ===== ITV / ITVX / BritBox =====
+DOMAIN-SUFFIX,itv.com
+DOMAIN-SUFFIX,itvstatic.com
+DOMAIN-SUFFIX,massive-itv.com
+DOMAIN-SUFFIX,britbox.com
+DOMAIN,itvpnp.live.ott.irdeto.com
+DOMAIN,itvpnp.stage.ott.irdeto.com
+DOMAIN,itvpnpmobile-a.akamaihd.net
+USER-AGENT,ITV_Player*
+
+# ===== Channel 4 =====
+DOMAIN-SUFFIX,channel4.com
+DOMAIN-SUFFIX,c4assets.com
+DOMAIN-SUFFIX,all4.com
+DOMAIN-SUFFIX,4od.com
+USER-AGENT,All4*
+
+# ===== Channel 5 / My5 =====
+DOMAIN-SUFFIX,channel5.com
+DOMAIN-SUFFIX,my5.tv
+
+# ===== Sky / Sky Go / NOW / Sky Sports =====
+DOMAIN-SUFFIX,sky.com
+DOMAIN-SUFFIX,skysports.com
+DOMAIN-SUFFIX,nowtv.com
+DOMAIN-SUFFIX,epgsky.com
+DOMAIN-SUFFIX,skyanywhere.com
+DOMAIN-SUFFIX,skycdp.com
+DOMAIN-SUFFIX,eu-1.xcal.tv
+DOMAIN-KEYWORD,bskyb
+DOMAIN-KEYWORD,skygo
+DOMAIN-KEYWORD,skyliveuk
+
+# ===== STV (Scotland) / S4C (Wales) =====
+DOMAIN-SUFFIX,stv.tv
+DOMAIN-SUFFIX,s4c.cymru
+
+# ===== BT / TNT Sports (tntsports.co.uk 走 .uk 兜底) =====
+DOMAIN-SUFFIX,bt.com
