@@ -1,14 +1,32 @@
 # NAME: UK
 # 所有英国服务 → UK 出口 (yunyoo London)。Surge 用法:
 #   RULE-SET,https://raw.githubusercontent.com/www011215/Surge_rule_list/refs/heads/main/Surge_UK.list,UK,extended-matching,no-resolve // UK
-# 结构: ① .uk 全 TLD 兜底 (co.uk/org.uk/ac.uk/gov.uk/nhs.uk… 全含)
+# 结构: ① .uk 二级域兜底 (co.uk/org.uk/ac.uk/gov.uk/nhs.uk… 逐个列, 故意不用裸 DOMAIN-SUFFIX,uk —— 自家 DDNS wdns.uk 会被误送去 UK)
 #       ② 用 .com/.tv 等非 .uk 域名的英国流媒体/服务, 按品牌分块
 # 来源: Sukka ruleset.skk.moe stream_eu (2026-08) + blackmatrix7 UKMedia/BBC/ITV/BritboxUK/SkyGO (2025-06, 去重合并,
 #       剔除 launchdarkly/conviva/omtrdc/comcast 等通用第三方 + skygo.co.nz) + 手工补 My5/STV/S4C/Channel4 别名 (2026-09-13, yunyoo dig 验证)
 # ⚠️ 不含全球性服务 (DAZN/Disney+/Netflix/Prime Video/Discovery+) —— 这些按账号地区另行处理
 
-# ===== ① UK TLD 兜底 =====
-DOMAIN-SUFFIX,uk
+# ===== ① UK 二级域兜底 =====
+# 2026-09-20: 原来一行 DOMAIN-SUFFIX,uk 会把 attmax.wdns.uk 之类自家 .uk DDNS 也送去 UK 出口 (SSH 直接超时),
+#             Surge 规则集没有排除语法, 所以改成按 Nominet / 公共机构二级域逐个兜底; 直接注册在 .uk 下的站 (xxx.uk) 需要时单独加行
+DOMAIN-SUFFIX,co.uk
+DOMAIN-SUFFIX,org.uk
+DOMAIN-SUFFIX,me.uk
+DOMAIN-SUFFIX,ltd.uk
+DOMAIN-SUFFIX,plc.uk
+DOMAIN-SUFFIX,net.uk
+DOMAIN-SUFFIX,sch.uk
+DOMAIN-SUFFIX,ac.uk
+DOMAIN-SUFFIX,gov.uk
+DOMAIN-SUFFIX,nhs.uk
+DOMAIN-SUFFIX,police.uk
+DOMAIN-SUFFIX,mod.uk
+DOMAIN-SUFFIX,parliament.uk
+DOMAIN-SUFFIX,judiciary.uk
+DOMAIN-SUFFIX,royal.uk
+DOMAIN-SUFFIX,bl.uk
+DOMAIN-SUFFIX,nic.uk
 
 # ===== ② BBC / iPlayer / Sounds =====
 DOMAIN-SUFFIX,bbc
