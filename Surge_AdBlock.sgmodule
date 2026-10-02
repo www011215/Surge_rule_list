@@ -1,5 +1,5 @@
 #!name = AdBlock
-#!desc = 通用广告域名拦截（RULE-SET 在线引用，自动同步上游更新，REJECT 集已启用 pre-matching：DNS 查询阶段即拒答，连接不建立）+ 常见 App 开屏广告 URL Rewrite（B站、微博、淘宝/天猫、京东、知乎、网易云音乐）。参考 blackmatrix7 / Maasea / app2smile / bai1zi 社区规则，精确路径优先，避免误伤主流。Repcz 集含逻辑规则不吃 pre-matching 故未加。
+#!desc = 通用广告域名拦截（RULE-SET 在线引用，自动同步上游更新，REJECT 集已启用 pre-matching：DNS 查询阶段即拒答，连接不建立）+ 常见 App 开屏广告 Map Local（B站、微博、淘宝/天猫、京东、知乎、网易云音乐）。参考 blackmatrix7 / Maasea / app2smile / bai1zi 社区规则，精确路径优先，避免误伤主流。Repcz 集含逻辑规则不吃 pre-matching 故未加。
 #!category = AdBlock
 
 [Rule]
@@ -59,38 +59,44 @@ mi.gdt.qq.com = reject
 ^https?:\/\/.+\.(mmstat|tanx)\.com\/.+ - reject
 ^https?:\/\/.+\.umeng(cloud)?\.com\/.+ - reject
 
-# 哔哩哔哩开屏 / 推荐位广告（不再屏蔽 feed/index，否则会导致首页推荐流空白）
-^https?:\/\/app\.bilibili\.com\/x\/v\d+\/splash\/(list|show|event\/list2) - reject-dict
-^https?:\/\/api\.bilibili\.com\/x\/v\d+\/splash - reject-dict
-^https?:\/\/app\.bilibili\.com\/x\/resource\/top\/activity - reject-dict
-^https?:\/\/api\.bilibili\.com\/pgc\/activity\/deliver\/material\/receive - reject-dict
-^https?:\/\/api\.bilibili\.com\/x\/vip\/ads\/material\/report - reject-dict
-^https?:\/\/manga\.bilibili\.com\/twirp\/comic\.v\d\.Comic\/(Flash|ListFlash) - reject-dict
-
-# 微博开屏（弃用 wbapplua，避免误伤 Lua UI 资源）
-^https?:\/\/(sdkapp|new)\.uve\.weibo\.com - reject-dict
-^https?:\/\/adimg\.uve\.weibo\.com - reject-img
-^https?:\/\/weibointl\.api\.weibo\.c(n|om)\/portal\.php\?.*a=get_coopen_ads - reject-dict
-^https?:\/\/tqt\.weibo\.cn\/api\/advert\/ - reject-dict
-
-# 淘宝 / 天猫开屏
-^https?:\/\/gw\.alicdn\.com\/.*splash - reject-img
-^https?:\/\/heic\.alicdn\.com\/imgextra\/.*splash - reject-img
-^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.alibaba\.advertisementservice\.getadv - reject-dict
-^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.etao\.noah\.query\/.+tao_splash - reject-dict
-
-# 京东开屏（functionId 允许出现在 query 任意位置）
-^https?:\/\/api\.m\.jd\.com\/client\.action\?(.*&)?functionId=start(&|$) - reject-array
-^https?:\/\/api\.m\.jd\.com\/client\.action\?(.*&)?functionId=(queryMaterialAdverts|home_launchConfig|getWidgetV1052)(&|$) - reject-dict
+# 京东广告投放 (adx)
 ^https?:\/\/(bdsp-x|dsp-x)\.jd\.com\/adx\/ - reject
 
+[Map Local]
+# Surge 的 [URL Rewrite] 只支持 header/302/307/reject; reject-dict/array/img 是 Loon/QX 写法, Surge 会整行忽略。
+# 所以 App 开屏广告改用 Map Local 本地直接返回空 JSON ({} / []) 或 1px GIF (需 MITM, 主机名见下方 [MITM])。
+
+# 哔哩哔哩开屏 / 推荐位广告（不再屏蔽 feed/index，否则会导致首页推荐流空白）
+^https?:\/\/app\.bilibili\.com\/x\/v\d+\/splash\/(list|show|event\/list2) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/api\.bilibili\.com\/x\/v\d+\/splash data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/app\.bilibili\.com\/x\/resource\/top\/activity data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/api\.bilibili\.com\/pgc\/activity\/deliver\/material\/receive data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/api\.bilibili\.com\/x\/vip\/ads\/material\/report data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/manga\.bilibili\.com\/twirp\/comic\.v\d\.Comic\/(Flash|ListFlash) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+# 微博开屏（弃用 wbapplua，避免误伤 Lua UI 资源）
+^https?:\/\/(sdkapp|new)\.uve\.weibo\.com data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/adimg\.uve\.weibo\.com data-type=tiny-gif status-code=200
+^https?:\/\/weibointl\.api\.weibo\.c(n|om)\/portal\.php\?.*a=get_coopen_ads data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/tqt\.weibo\.cn\/api\/advert\/ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+# 淘宝 / 天猫开屏
+^https?:\/\/gw\.alicdn\.com\/.*splash data-type=tiny-gif status-code=200
+^https?:\/\/heic\.alicdn\.com\/imgextra\/.*splash data-type=tiny-gif status-code=200
+^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.alibaba\.advertisementservice\.getadv data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.etao\.noah\.query\/.+tao_splash data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+# 京东开屏（functionId 允许出现在 query 任意位置）
+^https?:\/\/api\.m\.jd\.com\/client\.action\?(.*&)?functionId=start(&|$) data-type=text data="[]" status-code=200 header="Content-Type:application/json"
+^https?:\/\/api\.m\.jd\.com\/client\.action\?(.*&)?functionId=(queryMaterialAdverts|home_launchConfig|getWidgetV1052)(&|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
 # 知乎开屏 / 信息流
-^https?:\/\/api\.zhihu\.com\/commercial_api\/(launch|app_start) - reject-dict
-^https?:\/\/api\.zhihu\.com\/.*\/realtime_ad - reject-dict
+^https?:\/\/api\.zhihu\.com\/commercial_api\/(launch|app_start) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/api\.zhihu\.com\/.*\/realtime_ad data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 
 # 网易云音乐开屏
-^https?:\/\/iadmusicmat\.music\.126\.net - reject-dict
-^https?:\/\/interface\d?\.music\.163\.com\/(w?e?)api\/ad\/ - reject-dict
+^https?:\/\/iadmusicmat\.music\.126\.net data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/interface\d?\.music\.163\.com\/(w?e?)api\/ad\/ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 
 [MITM]
 hostname = %APPEND% *.googlesyndication.com, *.googleadservices.com, *.doubleclick.net, *.google-analytics.com, *.googletagmanager.com, graph.facebook.com, connect.facebook.net, cpro.baidu.com, pos.baidu.com, *.mmstat.com, *.tanx.com, *.umeng.com, *.umengcloud.com, api.bilibili.com, app.bilibili.com, manga.bilibili.com, sdkapp.uve.weibo.com, new.uve.weibo.com, adimg.uve.weibo.com, weibointl.api.weibo.cn, weibointl.api.weibo.com, tqt.weibo.cn, gw.alicdn.com, heic.alicdn.com, acs.m.taobao.com, api.m.jd.com, bdsp-x.jd.com, dsp-x.jd.com, api.zhihu.com, iadmusicmat.music.126.net, interface.music.163.com, interface*.music.163.com
