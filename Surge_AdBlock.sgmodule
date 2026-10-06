@@ -18,8 +18,6 @@ DOMAIN-SUFFIX,googleadservices.com,REJECT,pre-matching
 DOMAIN-SUFFIX,googlesyndication.com,REJECT,pre-matching
 DOMAIN-SUFFIX,google-analytics.com,REJECT,pre-matching
 DOMAIN-SUFFIX,googletagmanager.com,REJECT,pre-matching
-DOMAIN-SUFFIX,connect.facebook.net,REJECT,pre-matching
-DOMAIN-SUFFIX,graph.facebook.com,REJECT,pre-matching
 DOMAIN-SUFFIX,tanx.com,REJECT,pre-matching
 DOMAIN-SUFFIX,mmstat.com,REJECT,pre-matching
 DOMAIN-SUFFIX,umeng.com,REJECT,pre-matching
@@ -35,8 +33,6 @@ DOMAIN-SUFFIX,gdt.qq.com,REJECT,pre-matching
 *.googlesyndication.com = reject
 *.google-analytics.com = reject
 *.googletagmanager.com = reject
-graph.facebook.com = reject
-connect.facebook.net = reject
 *.tanx.com = reject
 *.mmstat.com = reject
 *.umeng.com = reject
@@ -53,7 +49,6 @@ mi.gdt.qq.com = reject
 ^https?:\/\/.+\.doubleclick\.net\/.+ - reject
 ^https?:\/\/.+\.google-analytics\.com\/.+ - reject
 ^https?:\/\/.+\.googletagmanager\.com\/.+ - reject
-^https?:\/\/graph\.facebook\.com\/.+\/(activities|advertisers) - reject
 ^https?:\/\/connect\.facebook\.net\/.*\/fbevents\.js - reject
 ^https?:\/\/(cpro|pos)\.baidu\.com\/.+ - reject
 ^https?:\/\/.+\.(mmstat|tanx)\.com\/.+ - reject
@@ -99,7 +94,7 @@ mi.gdt.qq.com = reject
 ^https?:\/\/interface\d?\.music\.163\.com\/(w?e?)api\/ad\/ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 
 [MITM]
-hostname = %APPEND% *.googlesyndication.com, *.googleadservices.com, *.doubleclick.net, *.google-analytics.com, *.googletagmanager.com, graph.facebook.com, connect.facebook.net, cpro.baidu.com, pos.baidu.com, *.mmstat.com, *.tanx.com, *.umeng.com, *.umengcloud.com, api.bilibili.com, app.bilibili.com, manga.bilibili.com, sdkapp.uve.weibo.com, new.uve.weibo.com, adimg.uve.weibo.com, weibointl.api.weibo.cn, weibointl.api.weibo.com, tqt.weibo.cn, gw.alicdn.com, heic.alicdn.com, acs.m.taobao.com, api.m.jd.com, bdsp-x.jd.com, dsp-x.jd.com, api.zhihu.com, iadmusicmat.music.126.net, interface.music.163.com, interface*.music.163.com
+hostname = %APPEND% *.googlesyndication.com, *.googleadservices.com, *.doubleclick.net, *.google-analytics.com, *.googletagmanager.com, connect.facebook.net, cpro.baidu.com, pos.baidu.com, *.mmstat.com, *.tanx.com, *.umeng.com, *.umengcloud.com, api.bilibili.com, app.bilibili.com, manga.bilibili.com, sdkapp.uve.weibo.com, new.uve.weibo.com, adimg.uve.weibo.com, weibointl.api.weibo.cn, weibointl.api.weibo.com, tqt.weibo.cn, gw.alicdn.com, heic.alicdn.com, acs.m.taobao.com, api.m.jd.com, bdsp-x.jd.com, dsp-x.jd.com, api.zhihu.com, iadmusicmat.music.126.net, interface.music.163.com, interface*.music.163.com
 h2 = true
 tcp-connection = true
 auto-quic-block = false
