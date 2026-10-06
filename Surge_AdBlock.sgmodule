@@ -3,7 +3,9 @@
 #!category = AdBlock
 
 [Rule]
-RULE-SET,https://anti-ad.net/surge.txt,REJECT,pre-matching
+# anti-ad 整表拦截, 但放行 graph.whatsapp.com (WhatsApp 功能接口) 与 staticxx.facebook.com (网页 Facebook 登录/插件);
+# 规则集没有排除语法, 只能用逻辑规则, 逻辑规则不吃 pre-matching。要再放行就追加一段 (NOT,((DOMAIN-SUFFIX,xxx)))
+AND,((RULE-SET,https://anti-ad.net/surge.txt),(NOT,((DOMAIN-SUFFIX,graph.whatsapp.com))),(NOT,((DOMAIN-SUFFIX,staticxx.facebook.com)))),REJECT
 # ── Reject 在线规则集（源自 anywhere-rules Reject.arrs 的上游，自动同步更新）──
 RULE-SET,https://raw.githubusercontent.com/ConnersHua/RuleGo/master/Surge/Ruleset/Extra/Reject/Advertising.list,REJECT,pre-matching
 RULE-SET,https://raw.githubusercontent.com/ConnersHua/RuleGo/master/Surge/Ruleset/Extra/Reject/Malicious.list,REJECT,pre-matching
