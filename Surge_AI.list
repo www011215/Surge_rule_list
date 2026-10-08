@@ -31,6 +31,14 @@ DOMAIN,o1158394.ingest.us.sentry.io
 DOMAIN,anthropic.com.cdn.cloudflare.net
 # claudecontent.com — NOT confirmed Anthropic (currently resolves to a parking IP 162.255.119.52, i.e. a squatter); added 2026-06-03 as a defensive "in case Anthropic ever acquires it" entry at user's explicit request
 DOMAIN-SUFFIX,claudecontent.com
+# --- added 2026-10-08 (对照用户给的 CLAUDE0409 规则集补漏; 其余条目本文件已有): Anthropic 自有 IP 段/ASN + Sift 风控与 Datadog 遥测 ---
+#     两条 KEYWORD 是宽匹配(任何含 datadog / sift 的域名都走 AT&T), 按"多放不能漏"保留; IP 类受 RULE-SET 行的 no-resolve 约束, 只匹配直接连 IP 的请求
+DOMAIN,anthropic.auth0.com
+DOMAIN-KEYWORD,datadog
+DOMAIN-KEYWORD,sift
+IP-CIDR,160.79.104.0/21,no-resolve
+IP-CIDR6,2607:6bc0::/32,no-resolve
+IP-ASN,399358,no-resolve
 # ========== end Claude ==========
 PROCESS-NAME,/Applications/Antigravity.app/
 PROCESS-NAME,/Applications/Claude.app/
