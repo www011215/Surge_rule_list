@@ -1,0 +1,7 @@
+#!name = 🛡️ Telemetry Block
+#!desc = 拦截崩溃上报 / 行为统计端点 (Sentry、腾讯灯塔 Beacon/MDT、微信 badjs), 这些上报会附带设备型号、设备 ID 等硬件信息。只收纯遥测域名, 不影响 App 功能; REJECT + pre-matching (DNS 阶段拒答), 无需 MITM。与 AdBlock (anti-ad) 部分重叠, 单独启用也能独立生效。
+#!author = www011215
+#!category = Privacy
+
+[Rule]
+RULE-SET,https://raw.githubusercontent.com/www011215/Surge_rule_list/refs/heads/main/Surge_Telemetry.list,REJECT,extended-matching,no-resolve,pre-matching
