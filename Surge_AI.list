@@ -6,6 +6,9 @@ DOMAIN-SUFFIX,claude.ai
 # --- added 2026-06-03 (manual): Claude/Anthropic product + telemetry domains missing from blackmatrix7 upstream; dig-verified ---
 DOMAIN-SUFFIX,claude.com
 DOMAIN-SUFFIX,clau.de
+# --- added 2026-11-09: ant.dev / antspace.dev + official Anthropic inbound/outbound 153.61 CIDRs ---
+DOMAIN-SUFFIX,ant.dev
+DOMAIN-SUFFIX,antspace.dev
 DOMAIN-SUFFIX,claudes.dev
 DOMAIN-SUFFIX,claudeusercontent.com
 DOMAIN-SUFFIX,claudemcpclient.com
@@ -38,6 +41,8 @@ DOMAIN,anthropic.auth0.com
 DOMAIN-KEYWORD,datadog
 DOMAIN-KEYWORD,sift
 IP-CIDR,160.79.104.0/21,no-resolve
+IP-CIDR,153.61.224.0/22,no-resolve
+IP-CIDR,153.61.208.0/20,no-resolve
 IP-CIDR6,2607:6bc0::/32,no-resolve
 IP-ASN,399358,no-resolve
 # ========== end Claude ==========
