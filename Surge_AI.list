@@ -9,6 +9,14 @@ DOMAIN-SUFFIX,clau.de
 # --- added 2026-11-09: ant.dev / antspace.dev + official Anthropic inbound/outbound 153.61 CIDRs ---
 DOMAIN-SUFFIX,ant.dev
 DOMAIN-SUFFIX,antspace.dev
+# --- added 2026-11-11: DOMAIN-KEYWORD claude/anthropic (new product domains keep appearing) + explicit suffixes ---
+DOMAIN-KEYWORD,claude
+DOMAIN-KEYWORD,anthropic
+DOMAIN-SUFFIX,claude.app
+DOMAIN-SUFFIX,claude.new
+DOMAIN-SUFFIX,claude.site
+DOMAIN-SUFFIX,claudepages.dev
+DOMAIN-SUFFIX,claude.dev
 DOMAIN-SUFFIX,claudes.dev
 DOMAIN-SUFFIX,claudeusercontent.com
 DOMAIN-SUFFIX,claudemcpclient.com
