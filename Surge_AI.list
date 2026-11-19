@@ -1,6 +1,6 @@
 ## New Added
 # ========== Claude / Anthropic (置顶 — 2026-06-14 重排到最上面, 优先匹配) ==========
-DOMAIN,cdn.usefathom.com
+DOMAIN-SUFFIX,usefathom.com
 DOMAIN-SUFFIX,anthropic.com
 DOMAIN-SUFFIX,claude.ai
 # --- added 2026-06-03 (manual): Claude/Anthropic product + telemetry domains missing from blackmatrix7 upstream; dig-verified ---
@@ -21,6 +21,9 @@ DOMAIN-SUFFIX,claudes.dev
 DOMAIN-SUFFIX,claudeusercontent.com
 DOMAIN-SUFFIX,claudemcpclient.com
 DOMAIN-SUFFIX,claudemcpcontent.com
+# --- added 2026-11-19 (from wquguru/one-exit): MCP site + Persona KYC used by Claude subscribe ---
+DOMAIN-SUFFIX,modelcontextprotocol.io
+DOMAIN-SUFFIX,withpersona.com
 DOMAIN,servd-anthropic-website.b-cdn.net
 DOMAIN,anthropic-com.ghost.io
 DOMAIN,browser-intake-us5-datadoghq.com
